@@ -1,19 +1,20 @@
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { THikeTopicName } from "shared/config/types";
-import { UICheckbox } from "shared/ui/components/ui-checkbox";
 import { ArrowIcon } from "shared/ui/icons/ui-arrow";
 
-import { THikeTopic } from "../model/types";
+import { THikeTopic, TStuffItem } from "../model/types";
 
 type THikeCardProps = {
   hikeItem: THikeTopic<THikeTopicName>;
   onAddNewStuff: () => void;
+  renderStuffItem: (stuff: TStuffItem<THikeTopicName>, index: number) => ReactNode;
+
   idEditing?: boolean;
 };
 
-export const HikeCard = ({ hikeItem, idEditing, onAddNewStuff }: THikeCardProps) => {
+export const HikeCard = ({ hikeItem, idEditing, onAddNewStuff, renderStuffItem }: THikeCardProps) => {
   const [collapsed, setCollapsed] = useState(true);
 
   return (
@@ -25,19 +26,7 @@ export const HikeCard = ({ hikeItem, idEditing, onAddNewStuff }: THikeCardProps)
         </View>
         <ArrowIcon width={48} height={48} style={[collapsed && styles.collapsedArrow]} />
       </Pressable>
-      {collapsed && (
-        <View>
-          {hikeItem.stuff.map((stuff, index) => (
-            <UICheckbox
-              key={stuff.id}
-              style={[styles.checkbox, index % 2 === 0 && styles.oddCheckbox]}
-              text={<Text>{stuff.title}</Text>}
-              checked={false}
-              onPress={() => {}}
-            />
-          ))}
-        </View>
-      )}
+      {collapsed && <View>{hikeItem.stuff.map(renderStuffItem)}</View>}
 
       {idEditing && (
         <Pressable style={styles.addButton} onPress={onAddNewStuff}>
