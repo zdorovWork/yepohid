@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { THikeTopicName } from "shared/config/types";
+import { UICheckbox } from "shared/ui/components/ui-checkbox";
 
 import { THikeTopic } from "../model/types";
 
@@ -16,7 +17,9 @@ export const HikeCard = ({ hikeItem, idEditing, onAddNewStuff }: THikeCardProps)
       <Text style={{ fontWeight: "bold" }}>{hikeItem.title}</Text>
       <View>
         {hikeItem.stuff.map((stuff) => (
-          <Text key={stuff.id}>{stuff.title}</Text>
+          <View key={stuff.id}>
+            <UICheckbox style={styles.checkbox} text={<Text>{stuff.title}</Text>} checked={false} onPress={() => {}} />
+          </View>
         ))}
       </View>
 
@@ -34,5 +37,8 @@ const styles = StyleSheet.create({
     padding: 10,
     borderWidth: 1,
     borderColor: "#ccc",
+  },
+  checkbox: {
+    paddingBlock: 10,
   },
 });
