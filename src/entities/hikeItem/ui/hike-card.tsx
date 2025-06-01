@@ -7,7 +7,6 @@ import { THikeTopic } from "../model/types";
 type THikeCardProps = {
   hikeItem: THikeTopic<THikeTopicName>;
   onAddNewStuff: () => void;
-
   idEditing?: boolean;
 };
 
