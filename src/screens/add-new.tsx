@@ -8,7 +8,7 @@ import { HikeCard, TStuffItem } from "entities/hikeItem";
 import { useHikeList } from "features/hikeList";
 import { THikeList } from "features/hikeList/model/types";
 
-import { EditTab, HomeTab, TabBar } from "widgets/tabbar";
+import { EditTab, HideSelectedTab, HomeTab, TabBar } from "widgets/tabbar";
 
 import { THikeTopicName } from "shared/config/types";
 import { UICheckbox } from "shared/ui/components/ui-checkbox";
@@ -18,6 +18,7 @@ export const AddNewScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { lists, saveList } = useHikeList();
   const [selectedStuffIds, setSelectedStuffIds] = useState<string[]>([]);
+  const [isHidingSelected, setIsHidingSelected] = useState(false);
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -45,20 +46,33 @@ export const AddNewScreen = () => {
     }
   };
 
-  const renderStuffItem = (stuff: TStuffItem<THikeTopicName>, index: number) => (
-    <UICheckbox
-      key={stuff.id}
-      style={[styles.checkbox, index % 2 === 0 && styles.oddCheckbox]}
-      text={<Text>{stuff.title}</Text>}
-      checked={selectedStuffIds?.includes(stuff.id) || false}
-      onPress={() => handleStuffPress(stuff.id)}
-    />
-  );
+  const renderStuffItem = (stuff: TStuffItem<THikeTopicName>, index: number) => {
+    const checked = !!selectedStuffIds?.includes(stuff.id);
+    const isHidden = isHidingSelected && checked;
+
+    if (isHidden) return null;
+
+    return (
+      <UICheckbox
+        key={stuff.id}
+        style={[styles.checkbox, index % 2 === 0 && styles.oddCheckbox]}
+        text={<Text>{stuff.title}</Text>}
+        checked={checked}
+        onPress={() => handleStuffPress(stuff.id)}
+      />
+    );
+  };
 
   return (
     <PageLayout
       tabbar={
-        <TabBar tabs={[<HomeTab key={"home"} />, <EditTab key={"edit"} onPress={() => setIsEditing(!isEditing)} />]} />
+        <TabBar
+          tabs={[
+            <HomeTab key={"home"} />,
+            <HideSelectedTab key={"hide"} onPress={() => setIsHidingSelected(!isHidingSelected)} />,
+            <EditTab key={"edit"} onPress={() => setIsEditing(!isEditing)} />,
+          ]}
+        />
       }
     >
       <Stack.Screen options={{ title: lists[id].title }} />

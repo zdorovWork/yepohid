@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 
 import { Routes } from "shared/config/routes";
+import { CheckedIcon } from "shared/ui/icons/checked-icon";
 import { EditIcon } from "shared/ui/icons/edit-icon";
 import { HomeIcon } from "shared/ui/icons/home-icon";
 
@@ -37,6 +38,10 @@ export const EditTab = ({ onPress }: { onPress: () => void }) => (
   <TabComponent key={"edit"} onPress={onPress} icon={<EditIcon />} text={"Редагувати"} />
 );
 
+export const HideSelectedTab = ({ onPress }: { onPress: () => void }) => (
+  <TabComponent key={"hide"} onPress={onPress} icon={<CheckedIcon />} text={"Приховати зібране"} />
+);
+
 const styles = StyleSheet.create({
   tabBar: {
     flexDirection: "row",
@@ -53,5 +58,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 14,
+    textAlign: "center",
   },
 });
