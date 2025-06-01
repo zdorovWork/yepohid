@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text } from "react-native";
 
 import { Stack, useLocalSearchParams } from "expo-router";
 
@@ -63,7 +63,7 @@ export const AddNewScreen = () => {
     >
       <Stack.Screen options={{ title: lists[id].title }} />
 
-      <View>
+      <ScrollView contentContainerStyle={styles.list}>
         {lists[id]?.items.map((hikeItem) => (
           <HikeCard
             key={hikeItem.id}
@@ -73,7 +73,7 @@ export const AddNewScreen = () => {
             renderStuffItem={renderStuffItem}
           />
         ))}
-      </View>
+      </ScrollView>
     </PageLayout>
   );
 };
@@ -84,5 +84,10 @@ const styles = StyleSheet.create({
   },
   oddCheckbox: {
     backgroundColor: "#ededed",
+  },
+  list: {
+    gap: 16,
+    padding: 16,
+    paddingBottom: 150,
   },
 });

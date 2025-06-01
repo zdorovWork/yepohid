@@ -40,7 +40,7 @@ export const HikeCard = ({ hikeItem, idEditing, onAddNewStuff, renderStuffItem }
 const styles = StyleSheet.create({
   container: {
     borderColor: "#75a93a",
-    borderWidth: 1,
+    borderWidth: 2,
     overflow: "hidden",
     borderRadius: 16,
   },
