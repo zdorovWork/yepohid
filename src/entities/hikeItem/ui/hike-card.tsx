@@ -10,18 +10,19 @@ type THikeCardProps = {
   hikeItem: THikeTopic<THikeTopicName>;
   onAddNewStuff: () => void;
   renderStuffItem: (stuff: TStuffItem<THikeTopicName>, index: number) => ReactNode;
+  progress: ReactNode;
 
   idEditing?: boolean;
 };
 
-export const HikeCard = ({ hikeItem, idEditing, onAddNewStuff, renderStuffItem }: THikeCardProps) => {
+export const HikeCard = ({ hikeItem, idEditing, onAddNewStuff, renderStuffItem, progress }: THikeCardProps) => {
   const [collapsed, setCollapsed] = useState(true);
 
   return (
     <View style={styles.container}>
       <Pressable style={styles.header} onPress={() => setCollapsed(!collapsed)}>
         <View style={styles.titleWrapper}>
-          <View style={styles.progress} />
+          {progress}
           <Text style={{ fontWeight: "bold", fontSize: 18 }}>{hikeItem.title}</Text>
         </View>
         <ArrowIcon width={48} height={48} style={[collapsed && styles.collapsedArrow]} />
@@ -50,12 +51,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  progress: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: "#75a93a",
-  },
+
   titleWrapper: {
     flexDirection: "row",
     gap: 8,

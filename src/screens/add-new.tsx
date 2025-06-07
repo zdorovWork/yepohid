@@ -12,6 +12,7 @@ import { EditTab, HideSelectedTab, HomeTab, TabBar } from "widgets/tabbar";
 
 import { THikeTopicName } from "shared/config/types";
 import { UICheckbox } from "shared/ui/components/ui-checkbox";
+import { UICircularProgress } from "shared/ui/components/ui-circular-progress";
 import { PageLayout } from "shared/ui/page_layout";
 
 export const AddNewScreen = () => {
@@ -36,6 +37,12 @@ export const AddNewScreen = () => {
 
     saveList(listCopy);
     setIsEditing(false);
+  };
+
+  const getHikeTopicSelectedCount = (topicId: THikeTopicName) => {
+    return lists[id]?.items
+      .find((item) => item.id === topicId)
+      ?.stuff.filter((stuff) => selectedStuffIds.includes(stuff.id)).length;
   };
 
   const handleStuffPress = (stuffId: string) => {
@@ -81,6 +88,14 @@ export const AddNewScreen = () => {
         {lists[id]?.items.map((hikeItem) => (
           <HikeCard
             key={hikeItem.id}
+            progress={
+              <UICircularProgress
+                current={getHikeTopicSelectedCount(hikeItem.id) || 0}
+                max={lists[id]?.items.find((item) => item.id === hikeItem.id)?.stuff.length || 0}
+                size={48}
+                strokeWidth={5}
+              />
+            }
             idEditing={isEditing}
             onAddNewStuff={handleAddNewStuff}
             hikeItem={hikeItem}
@@ -91,6 +106,9 @@ export const AddNewScreen = () => {
     </PageLayout>
   );
 };
+
+// count={getHikeTopicSelectedCount(hikeItem.id as THikeTopicName) || 0}
+
 const styles = StyleSheet.create({
   checkbox: {
     paddingBlock: 16,
@@ -103,5 +121,11 @@ const styles = StyleSheet.create({
     gap: 16,
     padding: 16,
     paddingBottom: 150,
+  },
+  progress: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: "#75a93a",
   },
 });
