@@ -8,14 +8,22 @@ import { THikeTopic, TStuffItem } from "../model/types";
 
 type THikeCardProps = {
   hikeItem: THikeTopic<THikeTopicName>;
-  onAddNewStuff: () => void;
+  onAddNewStuff: (topicName: THikeTopicName) => void;
   renderStuffItem: (stuff: TStuffItem<THikeTopicName>, index: number) => ReactNode;
   progress: ReactNode;
+  newStuffItems: ReactNode;
 
   idEditing?: boolean;
 };
 
-export const HikeCard = ({ hikeItem, idEditing, onAddNewStuff, renderStuffItem, progress }: THikeCardProps) => {
+export const HikeCard = ({
+  hikeItem,
+  idEditing,
+  onAddNewStuff,
+  renderStuffItem,
+  progress,
+  newStuffItems,
+}: THikeCardProps) => {
   const [collapsed, setCollapsed] = useState(true);
 
   return (
@@ -29,10 +37,14 @@ export const HikeCard = ({ hikeItem, idEditing, onAddNewStuff, renderStuffItem, 
       </Pressable>
       {collapsed && <View>{hikeItem.stuff.map(renderStuffItem)}</View>}
 
+      {newStuffItems}
+
       {idEditing && (
-        <Pressable style={styles.addButton} onPress={onAddNewStuff}>
-          <Text>Додати</Text>
-        </Pressable>
+        <View style={styles.addButton}>
+          <Pressable onPress={() => onAddNewStuff(hikeItem.id)}>
+            <Text>Додати</Text>
+          </Pressable>
+        </View>
       )}
     </View>
   );
