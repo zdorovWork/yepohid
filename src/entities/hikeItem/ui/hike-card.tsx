@@ -1,29 +1,18 @@
-import { ReactNode, useState } from "react";
+import { Children, ReactNode, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { THikeTopicName } from "shared/config/types";
 import { ArrowIcon } from "shared/ui/icons/ui-arrow";
 
-import { THikeTopic, TStuffItem } from "../model/types";
+import { THikeTopic } from "../model/types";
 
 type THikeCardProps = {
   hikeItem: THikeTopic<THikeTopicName>;
-  onAddNewStuff: (topicName: THikeTopicName) => void;
-  renderStuffItem: (stuff: TStuffItem<THikeTopicName>, index: number) => ReactNode;
   progress: ReactNode;
-  newStuffItems: ReactNode;
-
-  idEditing?: boolean;
+  children: ReactNode;
 };
 
-export const HikeCard = ({
-  hikeItem,
-  idEditing,
-  onAddNewStuff,
-  renderStuffItem,
-  progress,
-  newStuffItems,
-}: THikeCardProps) => {
+export const HikeCard = ({ hikeItem, progress, children }: THikeCardProps) => {
   const [collapsed, setCollapsed] = useState(true);
 
   return (
@@ -35,17 +24,12 @@ export const HikeCard = ({
         </View>
         <ArrowIcon width={48} height={48} style={[collapsed && styles.collapsedArrow]} />
       </Pressable>
-      {collapsed && <View>{hikeItem.stuff.map(renderStuffItem)}</View>}
-
-      {newStuffItems}
-
-      {idEditing && (
-        <View style={styles.addButton}>
-          <Pressable onPress={() => onAddNewStuff(hikeItem.id)}>
-            <Text>Додати</Text>
-          </Pressable>
-        </View>
-      )}
+      {collapsed &&
+        Children.toArray(children).map((child, index) => (
+          <View key={index} style={[styles.checkbox, index % 2 === 0 && styles.oddCheckbox]}>
+            {child}
+          </View>
+        ))}
     </View>
   );
 };
@@ -63,16 +47,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-
   titleWrapper: {
     flexDirection: "row",
     gap: 8,
     alignItems: "center",
-  },
-  addButton: {
-    padding: 10,
-    borderWidth: 1,
-    borderColor: "#ccc",
   },
   checkbox: {
     paddingBlock: 16,

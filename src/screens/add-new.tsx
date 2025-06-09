@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 import { Stack, useLocalSearchParams } from "expo-router";
 
@@ -114,7 +114,7 @@ export const AddNewScreen = () => {
 
     if (isEditing) {
       return (
-        <View key={stuff.id}>
+        <View key={stuff.id} style={{ justifyContent: "space-between", flexDirection: "row", alignItems: "center" }}>
           <Text>{stuff.title}</Text>
           <UIToggle value={enabled} onValueChange={() => toggleStuffEnabled(stuff.id)} />
         </View>
@@ -128,7 +128,6 @@ export const AddNewScreen = () => {
     return (
       <UICheckbox
         key={stuff.id}
-        style={[styles.checkbox, index % 2 === 0 && styles.oddCheckbox]}
         text={<Text>{stuff.title}</Text>}
         checked={checked}
         onPress={() => handleStuffPress(stuff.id)}
@@ -166,18 +165,24 @@ export const AddNewScreen = () => {
                 strokeWidth={5}
               />
             }
-            newStuffItems={addedStuff[hikeItem.id]?.map((stuff) => (
-              <TextInput
-                key={stuff.id}
-                placeholder="Нова задача"
-                onChangeText={(title) => handleChangeNewStuffTitle(hikeItem.id, stuff.id, title)}
-              />
-            ))}
-            idEditing={isEditing}
-            onAddNewStuff={handleAddNewStuff}
             hikeItem={hikeItem}
-            renderStuffItem={renderStuffItem}
-          />
+          >
+            {[
+              ...hikeItem.stuff.map((stuff, index) => renderStuffItem(stuff, index)),
+              ...(addedStuff[hikeItem.id] || []).map((stuff) => (
+                <TextInput
+                  key={stuff.id}
+                  placeholder="Нова задача"
+                  onChangeText={(title) => handleChangeNewStuffTitle(hikeItem.id, stuff.id, title)}
+                />
+              )),
+              <View key={"add"} style={styles.addButton}>
+                <Pressable onPress={() => handleAddNewStuff(hikeItem.id)}>
+                  <Text>Додати</Text>
+                </Pressable>
+              </View>,
+            ]}
+          </HikeCard>
         ))}
       </ScrollView>
     </PageLayout>
@@ -187,13 +192,6 @@ export const AddNewScreen = () => {
 // count={getHikeTopicSelectedCount(hikeItem.id as THikeTopicName) || 0}
 
 const styles = StyleSheet.create({
-  checkbox: {
-    paddingBlock: 16,
-    paddingInline: 24,
-  },
-  oddCheckbox: {
-    backgroundColor: "#ededed",
-  },
   list: {
     gap: 16,
     padding: 16,
@@ -204,5 +202,10 @@ const styles = StyleSheet.create({
     height: 48,
     borderRadius: 24,
     backgroundColor: "#75a93a",
+  },
+  addButton: {
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "#ccc",
   },
 });
