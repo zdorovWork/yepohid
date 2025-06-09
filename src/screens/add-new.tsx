@@ -8,7 +8,7 @@ import { HikeCard, TStuffItem } from "entities/hikeItem";
 import { useHikeList } from "features/hikeList";
 import { THikeList } from "features/hikeList/model/types";
 
-import { EditTab, HideSelectedTab, HomeTab, TabBar } from "widgets/tabbar";
+import { CheckTab, CrossTab, EditTab, HideSelectedTab, HomeTab, TabBar } from "widgets/tabbar";
 
 import { THikeTopicName } from "shared/config/types";
 import { UICheckbox } from "shared/ui/components/ui-checkbox";
@@ -41,15 +41,18 @@ export const AddNewScreen = () => {
   //   return itemsCopy;
   // };
 
+  const saveListChanges = () => {
+    const newList: THikeList = {
+      ...hikeList,
+      items: hikeList.items.map((item) => ({ ...item, stuff: [...item.stuff, ...(addedStuff[item.id] || [])] })),
+    };
+
+    saveList(newList);
+  };
   const handleToggleEditing = () => {
     setIsEditing((prev) => {
       if (prev === true) {
-        const newList: THikeList = {
-          ...hikeList,
-          items: hikeList.items.map((item) => ({ ...item, stuff: [...item.stuff, ...(addedStuff[item.id] || [])] })),
-        };
-
-        saveList(newList);
+        saveListChanges();
         return false;
       } else {
         return true;
@@ -139,11 +142,18 @@ export const AddNewScreen = () => {
     <PageLayout
       tabbar={
         <TabBar
-          tabs={[
-            <HomeTab key={"home"} />,
-            <HideSelectedTab key={"hide"} onPress={() => setIsHidingSelected(!isHidingSelected)} />,
-            <EditTab key={"edit"} onPress={handleToggleEditing} />,
-          ]}
+          tabs={
+            isEditing
+              ? [
+                  <CrossTab key={"cross"} onPress={() => setIsEditing(false)} />,
+                  <CheckTab key={"check"} onPress={saveListChanges} />,
+                ]
+              : [
+                  <HomeTab key={"home"} />,
+                  <HideSelectedTab key={"hide"} onPress={() => setIsHidingSelected(!isHidingSelected)} />,
+                  <EditTab key={"edit"} onPress={() => setIsEditing(true)} />,
+                ]
+          }
         />
       }
     >

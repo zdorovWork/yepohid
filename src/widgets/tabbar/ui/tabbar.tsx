@@ -6,6 +6,8 @@ import { router } from "expo-router";
 
 import { Routes } from "shared/config/routes";
 import { CheckedIcon } from "shared/ui/icons/checked-icon";
+import { CheckmarkIcon } from "shared/ui/icons/checkmark-icon";
+import { CrossIcon } from "shared/ui/icons/cross-icon";
 import { EditIcon } from "shared/ui/icons/edit-icon";
 import { HomeIcon } from "shared/ui/icons/home-icon";
 
@@ -40,6 +42,14 @@ export const EditTab = ({ onPress }: { onPress: () => void }) => (
 
 export const HideSelectedTab = ({ onPress }: { onPress: () => void }) => (
   <TabComponent key={"hide"} onPress={onPress} icon={<CheckedIcon />} text={"Приховати зібране"} />
+);
+
+export const CrossTab = ({ onPress }: { onPress: () => void }) => (
+  <TabComponent key={"cross"} onPress={onPress} icon={<CrossIcon />} text={""} />
+);
+
+export const CheckTab = ({ onPress }: { onPress: () => void }) => (
+  <TabComponent key={"check"} onPress={onPress} icon={<CheckmarkIcon />} text={""} />
 );
 
 const styles = StyleSheet.create({

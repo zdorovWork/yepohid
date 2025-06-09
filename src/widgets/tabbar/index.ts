@@ -1,1 +1,1 @@
-export { AddNewListTab, EditTab, HideSelectedTab, HomeTab, TabBar } from "./ui/tabbar";
+export { AddNewListTab, CheckTab, CrossTab, EditTab, HideSelectedTab, HomeTab, TabBar } from "./ui/tabbar";
