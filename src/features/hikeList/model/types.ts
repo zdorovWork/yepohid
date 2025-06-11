@@ -9,4 +9,5 @@ export type THikeList = {
   items: THikeTopic<THikeTopicName>[];
   customStuff: TAddedStuff;
   disabledStuffNames: THikeStuffName<THikeTopicName>[];
+  // selectedStuffNames: THikeStuffName<THikeTopicName>[];
 };

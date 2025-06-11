@@ -21,14 +21,29 @@ import { AddedStuff } from "./added-stuff";
 
 export const ListScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { lists, saveList } = useHikeList();
-  const [selectedStuffIds, setSelectedStuffIds] = useState<string[]>([]);
-  const [disabledStuffIds, setDisabledStuffIds] = useState<string[]>([]);
-  const [isHidingSelected, setIsHidingSelected] = useState(false);
+  const { lists, saveList, selectedListStuff, toggleStuffChecked } = useHikeList();
   const [hikeList, setHikeList] = useState<THikeList>(JSON.parse(JSON.stringify(lists[id])) as THikeList);
+
+  const selectedStuffIds = selectedListStuff[id] || [];
+
+  // const [selectedStuffIds, setSelectedStuffIds] = useState<string[]>(hikeList.selectedStuffNames || []);
+  const [disabledStuffIds, setDisabledStuffIds] = useState<string[]>(hikeList.disabledStuffNames || []);
   const [addedStuffDraft, setAddedStuffDraft] = useState<TAddedStuff>(hikeList.customStuff || {});
 
+  const [isHidingSelected, setIsHidingSelected] = useState(false);
+
   const [isEditing, setIsEditing] = useState(false);
+
+  const saveListChanges = () => {
+    const newList: THikeList = {
+      ...hikeList,
+      customStuff: addedStuffDraft,
+      disabledStuffNames: disabledStuffIds,
+      // selectedStuffNames,
+    };
+
+    saveList(newList);
+  };
 
   useEffect(() => {
     setHikeList(JSON.parse(JSON.stringify(lists[id])) as THikeList);
@@ -47,17 +62,6 @@ export const ListScreen = () => {
 
   //   return itemsCopy;
   // };
-
-  const saveListChanges = () => {
-    const newList: THikeList = {
-      ...hikeList,
-      // items: hikeList.items.map((item) => ({ ...item, stuff: [...item.stuff, ...(addedStuffDraft[item.id] || [])] })),
-      customStuff: addedStuffDraft,
-      disabledStuffNames: disabledStuffIds,
-    };
-
-    saveList(newList);
-  };
 
   const toggleStuffEnabled = (stuffId: string) => {
     setDisabledStuffIds((prev) => (prev.includes(stuffId) ? prev.filter((id) => id !== stuffId) : [...prev, stuffId]));
@@ -102,13 +106,13 @@ export const ListScreen = () => {
       ?.stuff.filter((stuff) => selectedStuffIds.includes(stuff.id) && !disabledStuffIds.includes(stuff.id)).length;
   };
 
-  const handleStuffPress = (stuffId: string) => {
-    if (selectedStuffIds?.includes(stuffId)) {
-      setSelectedStuffIds((prev) => prev.filter((id) => id !== stuffId));
-    } else {
-      setSelectedStuffIds((prev) => [...prev, stuffId]);
-    }
-  };
+  // const handleStuffPress = (stuffId: string) => {
+  //   if (selectedStuffIds?.includes(stuffId)) {
+  //     setSelectedStuffIds((prev) => prev.filter((id) => id !== stuffId));
+  //   } else {
+  //     setSelectedStuffIds((prev) => [...prev, stuffId]);
+  //   }
+  // };
 
   const renderStuffItem = (stuff: TStuffItem<THikeTopicName>, index: number) => {
     const checked = !!selectedStuffIds?.includes(stuff.id);
@@ -132,7 +136,7 @@ export const ListScreen = () => {
         key={stuff.id}
         text={<Text>{stuff.title}</Text>}
         checked={checked}
-        onPress={() => handleStuffPress(stuff.id)}
+        onPress={() => toggleStuffChecked(id, stuff.id)}
       />
     );
   };
@@ -199,7 +203,11 @@ export const ListScreen = () => {
               ...hikeItem.stuff.map((stuff, index) => renderStuffItem(stuff, index)),
               ...(addedStuffDraft[hikeItem.id] || [])
                 .filter(
-                  (stuff) => isEditing || !disabledStuffIds.includes(stuff.id) || selectedStuffIds?.includes(stuff.id),
+                  (stuff) =>
+                    isEditing ||
+                    (!disabledStuffIds.includes(stuff.id) &&
+                      !selectedStuffIds?.includes(stuff.id) &&
+                      !isHidingSelected),
                 )
                 .map((stuff) => (
                   <AddedStuff
@@ -211,7 +219,7 @@ export const ListScreen = () => {
                     enabled={!disabledStuffIds.includes(stuff.id)}
                     text={stuff.title}
                     selected={selectedStuffIds.includes(stuff.id)}
-                    onSelect={() => handleStuffPress(stuff.id)}
+                    onSelect={() => toggleStuffChecked(hikeItem.id, stuff.id)}
                   />
                 )),
               ...(isEditing
