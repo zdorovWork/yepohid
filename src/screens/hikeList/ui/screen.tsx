@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { Stack, useLocalSearchParams } from "expo-router";
 
-import { HikeCard, TStuffItem } from "entities/hikeItem";
+import { HikeCard, TAddedStuff, TStuffItem } from "entities/hikeItem";
 
 import { useHikeList } from "features/hikeList";
 import { THikeList } from "features/hikeList/model/types";
@@ -14,18 +14,25 @@ import { THikeTopicName } from "shared/config/types";
 import { UICheckbox } from "shared/ui/components/ui-checkbox";
 import { UICircularProgress } from "shared/ui/components/ui-circular-progress";
 import { UIToggle } from "shared/ui/components/ui-toggle";
+import { CrossIcon } from "shared/ui/icons/cross-icon";
 import { PageLayout } from "shared/ui/page_layout";
 
-export const AddNewScreen = () => {
+import { AddedStuff } from "./added-stuff";
+
+export const ListScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { lists, saveList } = useHikeList();
   const [selectedStuffIds, setSelectedStuffIds] = useState<string[]>([]);
   const [disabledStuffIds, setDisabledStuffIds] = useState<string[]>([]);
   const [isHidingSelected, setIsHidingSelected] = useState(false);
   const [hikeList, setHikeList] = useState<THikeList>(JSON.parse(JSON.stringify(lists[id])) as THikeList);
-  const [addedStuff, setAddedStuff] = useState<Partial<Record<THikeTopicName, TStuffItem<THikeTopicName>[]>>>({});
+  const [addedStuffDraft, setAddedStuffDraft] = useState<TAddedStuff>(hikeList.customStuff || {});
 
   const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    setHikeList(JSON.parse(JSON.stringify(lists[id])) as THikeList);
+  }, [lists, id]);
 
   if (!hikeList) return null;
 
@@ -44,20 +51,12 @@ export const AddNewScreen = () => {
   const saveListChanges = () => {
     const newList: THikeList = {
       ...hikeList,
-      items: hikeList.items.map((item) => ({ ...item, stuff: [...item.stuff, ...(addedStuff[item.id] || [])] })),
+      // items: hikeList.items.map((item) => ({ ...item, stuff: [...item.stuff, ...(addedStuffDraft[item.id] || [])] })),
+      customStuff: addedStuffDraft,
+      disabledStuffNames: disabledStuffIds,
     };
 
     saveList(newList);
-  };
-  const handleToggleEditing = () => {
-    setIsEditing((prev) => {
-      if (prev === true) {
-        saveListChanges();
-        return false;
-      } else {
-        return true;
-      }
-    });
   };
 
   const toggleStuffEnabled = (stuffId: string) => {
@@ -78,20 +77,20 @@ export const AddNewScreen = () => {
     // saveList(listCopy);
     // setIsEditing(false);
 
-    setAddedStuff((prev) => ({
+    setAddedStuffDraft((prev) => ({
       ...prev,
       [topicName]: [
         ...(prev[topicName] || []),
         {
           id: (Math.random() + 1).toString(36).substring(7),
-          title: "New stuff",
+          title: "",
         },
       ],
     }));
   };
 
   const handleChangeNewStuffTitle = (topicName: THikeTopicName, stuffId: string, title: string) => {
-    setAddedStuff((prev) => ({
+    setAddedStuffDraft((prev) => ({
       ...prev,
       [topicName]: prev[topicName]?.map((stuff) => (stuff.id === stuffId ? { ...stuff, title } : stuff)),
     }));
@@ -138,6 +137,25 @@ export const AddNewScreen = () => {
     );
   };
 
+  const handleRemoveAddedStuff = (topicName: THikeTopicName, stuffId: string) => {
+    setAddedStuffDraft((prev) => ({
+      ...prev,
+      [topicName]: prev[topicName]?.filter((stuff) => stuff.id !== stuffId),
+    }));
+  };
+
+  const handleCancelEditing = () => {
+    setDisabledStuffIds(hikeList.disabledStuffNames || []);
+
+    setAddedStuffDraft(hikeList.customStuff || {});
+    setIsEditing(false);
+  };
+
+  const handleSubmitEditing = () => {
+    saveListChanges();
+    setIsEditing(false);
+  };
+
   return (
     <PageLayout
       tabbar={
@@ -145,8 +163,8 @@ export const AddNewScreen = () => {
           tabs={
             isEditing
               ? [
-                  <CrossTab key={"cross"} onPress={() => setIsEditing(false)} />,
-                  <CheckTab key={"check"} onPress={saveListChanges} />,
+                  <CrossTab key={"cross"} onPress={handleCancelEditing} />,
+                  <CheckTab key={"check"} onPress={handleSubmitEditing} />,
                 ]
               : [
                   <HomeTab key={"home"} />,
@@ -179,18 +197,31 @@ export const AddNewScreen = () => {
           >
             {[
               ...hikeItem.stuff.map((stuff, index) => renderStuffItem(stuff, index)),
-              ...(addedStuff[hikeItem.id] || []).map((stuff) => (
-                <TextInput
-                  key={stuff.id}
-                  placeholder="Нова задача"
-                  onChangeText={(title) => handleChangeNewStuffTitle(hikeItem.id, stuff.id, title)}
-                />
-              )),
-              <View key={"add"} style={styles.addButton}>
-                <Pressable onPress={() => handleAddNewStuff(hikeItem.id)}>
-                  <Text>Додати</Text>
-                </Pressable>
-              </View>,
+              ...(addedStuffDraft[hikeItem.id] || [])
+                .filter(
+                  (stuff) => isEditing || !disabledStuffIds.includes(stuff.id) || selectedStuffIds?.includes(stuff.id),
+                )
+                .map((stuff) => (
+                  <AddedStuff
+                    key={stuff.id}
+                    onChangeText={(title) => handleChangeNewStuffTitle(hikeItem.id, stuff.id, title)}
+                    isEditing={isEditing}
+                    onToggle={() => toggleStuffEnabled(stuff.id)}
+                    onRemove={() => handleRemoveAddedStuff(hikeItem.id, stuff.id)}
+                    enabled={!disabledStuffIds.includes(stuff.id)}
+                    text={stuff.title}
+                    selected={selectedStuffIds.includes(stuff.id)}
+                    onSelect={() => handleStuffPress(stuff.id)}
+                  />
+                )),
+              ...(isEditing
+                ? [
+                    <Pressable style={styles.addNewElement} key={"add"} onPress={() => handleAddNewStuff(hikeItem.id)}>
+                      <CrossIcon rotation={45} />
+                      <Text>Додати новий елемент</Text>
+                    </Pressable>,
+                  ]
+                : []),
             ]}
           </HikeCard>
         ))}
@@ -213,9 +244,9 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     backgroundColor: "#75a93a",
   },
-  addButton: {
-    padding: 10,
-    borderWidth: 1,
-    borderColor: "#ccc",
+  addNewElement: {
+    flexDirection: "column",
+    alignItems: "center",
+    gap: 4,
   },
 });

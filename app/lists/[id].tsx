@@ -1,3 +1,3 @@
-import { AddNewScreen } from "screens/add-new";
+import { ListScreen } from "screens/hikeList";
 
-export default AddNewScreen;
+export default ListScreen;

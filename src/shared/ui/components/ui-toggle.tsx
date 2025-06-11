@@ -1,17 +1,18 @@
 import React from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 
 type TUIToggleProps = {
   value: boolean;
   onValueChange: (newValue: boolean) => void;
   disabled?: boolean;
+  style?: StyleProp<ViewStyle>;
 };
 
-export const UIToggle = ({ value, onValueChange, disabled = false }: TUIToggleProps) => {
+export const UIToggle = ({ value, onValueChange, style, disabled = false }: TUIToggleProps) => {
   return (
     <Pressable
       onPress={() => !disabled && onValueChange(!value)}
-      style={[styles.switch, value ? styles.switchOn : styles.switchOff, disabled && styles.disabled]}
+      style={[styles.switch, value ? styles.switchOn : styles.switchOff, disabled && styles.disabled, style]}
     >
       <View style={[styles.thumb, value ? styles.thumbOn : styles.thumbOff]} />
     </Pressable>

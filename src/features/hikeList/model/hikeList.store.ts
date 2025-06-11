@@ -11,11 +11,11 @@ type THikeListState = {
 
 export const useHikeList = create<THikeListState>()((set, get) => ({
   lists: {},
+  addedStuff: {},
 
   addList: (list) => {
     set((state) => ({ lists: { ...state.lists, [list.id]: list } }));
   },
-
   saveList: (list) => {
     set((state) => ({ lists: { ...state.lists, [list.id]: list } }));
   },
