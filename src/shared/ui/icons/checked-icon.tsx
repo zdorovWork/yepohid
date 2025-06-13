@@ -3,7 +3,7 @@ import { memo } from "react";
 import Svg, { G, Path, Rect, SvgProps } from "react-native-svg";
 
 export const CheckedIcon = memo((props: SvgProps) => (
-  <Svg width={32} height={32} className="mb-1" {...props}>
+  <Svg width={32} height={32} {...props}>
     <G
       fill="none"
       fillRule="evenodd"

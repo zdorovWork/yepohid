@@ -3,7 +3,7 @@ import { memo } from "react";
 import Svg, { Path, SvgProps } from "react-native-svg";
 
 const TrashIcon = (props: SvgProps) => (
-  <Svg width={32} height={32} className="ml-2" {...props}>
+  <Svg width={32} height={32} {...props}>
     <Path
       fill="none"
       fillRule="evenodd"
