@@ -32,6 +32,8 @@ export const CreateHikeListModal = ({ closeModal }: TCreateHikeListModalProps) =
       title: listName,
       tags: listTags,
       items: listItems,
+      customStuff: {},
+      disabledStuffNames: [],
     });
 
     closeModal({ hikeListId: listId });
