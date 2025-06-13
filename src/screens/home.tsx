@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import { router } from "expo-router";
+import { Stack, router } from "expo-router";
 
 import { CreateHikeListModal, useHikeList } from "features/hikeList";
 
@@ -32,6 +32,7 @@ export const HomeScreen = () => {
 
   return (
     <PageLayout tabbar={<TabBar tabs={[<AddNewListTab key={"add-new"} onPress={handleCreateHikeList} />]} />}>
+      <Stack.Screen options={{ headerTitle: "Home", headerBackVisible: false }} />
       <View style={styles.list}>
         {Object.entries(lists).map(([id, list]) => (
           <Pressable key={id} onPress={() => handleListPress(id)}>

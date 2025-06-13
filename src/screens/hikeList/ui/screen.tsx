@@ -11,6 +11,7 @@ import { THikeList } from "features/hikeList/model/types";
 import { CheckTab, CrossTab, EditTab, HideSelectedTab, HomeTab, TabBar } from "widgets/tabbar";
 
 import { THikeTopicName } from "shared/config/types";
+import { storageService } from "shared/service/storage";
 import { UICheckbox } from "shared/ui/components/ui-checkbox";
 import { UICircularProgress } from "shared/ui/components/ui-circular-progress";
 import { UIToggle } from "shared/ui/components/ui-toggle";
@@ -21,12 +22,12 @@ import { AddedStuff } from "./added-stuff";
 
 export const ListScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { lists, saveList, selectedListStuff, toggleStuffChecked } = useHikeList();
+  const { lists, saveList } = useHikeList();
   const [hikeList, setHikeList] = useState<THikeList>(JSON.parse(JSON.stringify(lists[id])) as THikeList);
 
-  const selectedStuffIds = selectedListStuff[id] || [];
+  // const selectedStuffIds = selectedListStuff[id] || [];
 
-  // const [selectedStuffIds, setSelectedStuffIds] = useState<string[]>(hikeList.selectedStuffNames || []);
+  const [selectedStuffIds, setSelectedStuffIds] = useState<string[]>([]);
   const [disabledStuffIds, setDisabledStuffIds] = useState<string[]>(hikeList.disabledStuffNames || []);
   const [addedStuffDraft, setAddedStuffDraft] = useState<TAddedStuff>(hikeList.customStuff || {});
 
@@ -48,6 +49,21 @@ export const ListScreen = () => {
   useEffect(() => {
     setHikeList(JSON.parse(JSON.stringify(lists[id])) as THikeList);
   }, [lists, id]);
+
+  useEffect(() => {
+    const getSelectedFromStorage = async () => {
+      const selected = await storageService.getItem(`selectedListStuff.${id}`);
+      if (selected) {
+        setSelectedStuffIds(JSON.parse(selected));
+      }
+    };
+
+    getSelectedFromStorage();
+  }, []);
+
+  useEffect(() => {
+    storageService.setItem(`selectedListStuff.${id}`, JSON.stringify(selectedStuffIds));
+  }, [id, selectedStuffIds]);
 
   if (!hikeList) return null;
 
@@ -103,16 +119,17 @@ export const ListScreen = () => {
   const getHikeTopicSelectedCount = (topicId: THikeTopicName) => {
     return lists[id]?.items
       .find((item) => item.id === topicId)
-      ?.stuff.filter((stuff) => selectedStuffIds.includes(stuff.id) && !disabledStuffIds.includes(stuff.id)).length;
+      ?.stuff.concat(addedStuffDraft[topicId] || [])
+      .filter((stuff) => selectedStuffIds.includes(stuff.id) && !disabledStuffIds.includes(stuff.id)).length;
   };
 
-  // const handleStuffPress = (stuffId: string) => {
-  //   if (selectedStuffIds?.includes(stuffId)) {
-  //     setSelectedStuffIds((prev) => prev.filter((id) => id !== stuffId));
-  //   } else {
-  //     setSelectedStuffIds((prev) => [...prev, stuffId]);
-  //   }
-  // };
+  const handleStuffPress = (stuffId: string) => {
+    if (selectedStuffIds?.includes(stuffId)) {
+      setSelectedStuffIds((prev) => prev.filter((id) => id !== stuffId));
+    } else {
+      setSelectedStuffIds((prev) => [...prev, stuffId]);
+    }
+  };
 
   const renderStuffItem = (stuff: TStuffItem<THikeTopicName>, index: number) => {
     const checked = !!selectedStuffIds?.includes(stuff.id);
@@ -136,7 +153,7 @@ export const ListScreen = () => {
         key={stuff.id}
         text={<Text>{stuff.title}</Text>}
         checked={checked}
-        onPress={() => toggleStuffChecked(id, stuff.id)}
+        onPress={() => handleStuffPress(stuff.id)}
       />
     );
   };
@@ -191,7 +208,8 @@ export const ListScreen = () => {
                 max={
                   lists[id]?.items
                     .find((item) => item.id === hikeItem.id)
-                    ?.stuff.filter((stuff) => !disabledStuffIds.includes(stuff.id)).length || 0
+                    ?.stuff.concat(addedStuffDraft[hikeItem.id] || [])
+                    .filter((stuff) => !disabledStuffIds.includes(stuff.id)).length || 0
                 }
                 size={48}
                 strokeWidth={5}
@@ -205,9 +223,8 @@ export const ListScreen = () => {
                 .filter(
                   (stuff) =>
                     isEditing ||
-                    (!disabledStuffIds.includes(stuff.id) &&
-                      !selectedStuffIds?.includes(stuff.id) &&
-                      !isHidingSelected),
+                    !disabledStuffIds.includes(stuff.id) ||
+                    (!selectedStuffIds?.includes(stuff.id) && !isHidingSelected),
                 )
                 .map((stuff) => (
                   <AddedStuff
@@ -219,7 +236,7 @@ export const ListScreen = () => {
                     enabled={!disabledStuffIds.includes(stuff.id)}
                     text={stuff.title}
                     selected={selectedStuffIds.includes(stuff.id)}
-                    onSelect={() => toggleStuffChecked(hikeItem.id, stuff.id)}
+                    onSelect={() => handleStuffPress(stuff.id)}
                   />
                 )),
               ...(isEditing
