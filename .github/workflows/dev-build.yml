@@ -1,0 +1,56 @@
+name: Dev APK Build (Local)
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Cache Gradle
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript check
+        run: npx tsc --noEmit
+
+      - name: Prebuild Android
+        run: npx expo prebuild --platform android --non-interactive
+
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug
+        working-directory: android
+
+      - name: Rename APK for clarity
+        run: mv android/app/build/outputs/apk/debug/app-debug.apk dev-app.apk
+
+      - name: Upload APK as GitHub artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-app
+          path: dev-app.apk
