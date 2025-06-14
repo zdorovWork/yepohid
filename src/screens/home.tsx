@@ -16,34 +16,36 @@ type TCreateHikeListModalResponse = {
 
 export const HomeScreen = () => {
   const { lists } = useHikeList();
-
   const createListModal = useModal<TCreateHikeListModalResponse>()(CreateHikeListModal);
 
-  const handleListPress = (id: string) => {
+  const redirectToList = (id: string) => {
     router.push(`/${Routes.LISTS}/${id}`);
   };
 
   const handleCreateHikeList = async () => {
     const response = await createListModal.showModal({});
     if (response?.hikeListId) {
-      router.push(`/${Routes.LISTS}/${response.hikeListId}`);
+      redirectToList(response.hikeListId);
     }
   };
 
   return (
-    <PageLayout tabbar={<TabBar tabs={[<AddNewListTab key={"add-new"} onPress={handleCreateHikeList} />]} />}>
-      <Stack.Screen options={{ headerTitle: "Home", headerBackVisible: false }} />
-      <View style={styles.list}>
-        {Object.entries(lists).map(([id, list]) => (
-          <Pressable key={id} onPress={() => handleListPress(id)}>
-            <View style={styles.listItem}>
-              <Text>{list.title}</Text>
-              <Text>{list.tags.join(", ")}</Text>
-            </View>
-          </Pressable>
-        ))}
-      </View>
-    </PageLayout>
+    <>
+      <Stack.Screen options={{ headerTitle: "Equipment lists", headerBackVisible: false }} />
+
+      <PageLayout tabbar={<TabBar tabs={[<AddNewListTab key={"add-new"} onPress={handleCreateHikeList} />]} />}>
+        <View style={styles.list}>
+          {Object.entries(lists).map(([id, list]) => (
+            <Pressable key={id} onPress={() => redirectToList(id)}>
+              <View style={styles.listItem}>
+                <Text>{list.title}</Text>
+                <Text>{list.tags.join(", ")}</Text>
+              </View>
+            </Pressable>
+          ))}
+        </View>
+      </PageLayout>
+    </>
   );
 };
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
-import { THikeBedroomType, THikeKitchenType } from "shared/config/types";
+import { HIKE_BEDROOM_TYPES, HIKE_KITCHEN_TYPES, THikeBedroomType, THikeKitchenType } from "shared/config/types";
 import { Modal } from "shared/ui/modal";
 
 import { getBedroomInitialHikeTopic } from "../lib/hike-topic/bedroom";
@@ -13,12 +13,24 @@ type TCreateHikeListModalProps = {
   closeModal: (data: { hikeListId: string } | null) => void;
 };
 
+const bedroomTitleMapper: Record<THikeBedroomType, string> = {
+  tent: "Tent",
+  awning: "Awning",
+  hamac: "Hamac",
+};
+
+const kitchenTitleMapper: Record<THikeKitchenType, string> = {
+  fire: "Fire",
+  cauldron: "Cauldron",
+  integrationSystem: "Integration system",
+};
+
 export const CreateHikeListModal = ({ closeModal }: TCreateHikeListModalProps) => {
   const { addList } = useHikeList();
   const [listName, setListName] = useState("");
 
   const [kitchenType, setKitchenType] = useState<THikeKitchenType>("cauldron");
-  const [bedroomType, setBedroomType] = useState<THikeBedroomType>("floor");
+  const [bedroomType, setBedroomType] = useState<THikeBedroomType>("awning");
 
   const handleCreateHikeList = () => {
     const listId = (Math.random() + 1).toString(36).substring(7);
@@ -44,31 +56,23 @@ export const CreateHikeListModal = ({ closeModal }: TCreateHikeListModalProps) =
       <View style={styles.container}>
         <TextInput
           value={listName}
-          placeholder="Name"
+          placeholder="Please enter equipment list name"
           style={styles.listName}
           onChange={(e) => setListName(e.nativeEvent.text)}
         />
         <View style={styles.actions}>
-          <Pressable style={styles.listName} onPress={() => setKitchenType("cauldron")}>
-            <Text>cauldron</Text>
-          </Pressable>
-          <Pressable style={styles.listName} onPress={() => setKitchenType("fire")}>
-            <Text>fire</Text>
-          </Pressable>
-          <Pressable style={styles.listName} onPress={() => setKitchenType("integrationSystem")}>
-            <Text>integrationSystem</Text>
-          </Pressable>
+          {Object.values(HIKE_KITCHEN_TYPES).map((kitchenType) => (
+            <Pressable key={kitchenType} style={styles.listName} onPress={() => setKitchenType(kitchenType)}>
+              <Text>{kitchenTitleMapper[kitchenType]}</Text>
+            </Pressable>
+          ))}
         </View>
         <View style={styles.actions}>
-          <Pressable style={styles.listName} onPress={() => setBedroomType("tent")}>
-            <Text>tent</Text>
-          </Pressable>
-          <Pressable style={styles.listName} onPress={() => setBedroomType("floor")}>
-            <Text>floor</Text>
-          </Pressable>
-          <Pressable style={styles.listName} onPress={() => setBedroomType("hamac")}>
-            <Text>hamac</Text>
-          </Pressable>
+          {Object.values(HIKE_BEDROOM_TYPES).map((bedroomType) => (
+            <Pressable key={bedroomType} style={styles.listName} onPress={() => setBedroomType(bedroomType)}>
+              <Text>{bedroomTitleMapper[bedroomType]}</Text>
+            </Pressable>
+          ))}
         </View>
         <Pressable style={styles.listName} onPress={handleCreateHikeList}>
           <Text>Create</Text>

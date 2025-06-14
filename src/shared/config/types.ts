@@ -59,7 +59,7 @@ type THikeStuffMapper = {
   [HIKE_TOPIC_NAMES.electronics]: (typeof HIKE_STUFF_ELECTRONICS_NAMES)[keyof typeof HIKE_STUFF_ELECTRONICS_NAMES];
 };
 
-export type THikeStuffName<T extends keyof THikeStuffMapper> = THikeStuffMapper[T];
+export type THikeStuffName<T extends keyof THikeStuffMapper = THikeTopicName> = THikeStuffMapper[T];
 
 export const HIKE_KITCHEN_TYPES = {
   fire: "fire",
@@ -71,7 +71,7 @@ export type THikeKitchenType = (typeof HIKE_KITCHEN_TYPES)[keyof typeof HIKE_KIT
 
 export const HIKE_BEDROOM_TYPES = {
   tent: "tent",
-  floor: "floor",
+  awning: "awning",
   hamac: "hamac",
 } as const;
 
