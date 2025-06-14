@@ -138,12 +138,14 @@ export const ListScreen = () => {
               {[
                 ...hikeItem.stuff.map((stuff, index) => renderStuffItem(stuff, index)),
                 ...(addedStuff[hikeItem.id] || [])
-                  .filter(
-                    (stuff) =>
-                      isEditing ||
-                      !disabledIds.includes(stuff.id) ||
-                      (!selectedIds?.includes(stuff.id) && !isHidingSelected),
-                  )
+                  .filter((stuff) => {
+                    const checked = !!selectedIds?.includes(stuff.id);
+                    const enabled = !disabledIds?.includes(stuff.id);
+
+                    const isHidden = (isHidingSelected && checked) || !enabled;
+
+                    return !isHidden;
+                  })
                   .map((stuff) => (
                     <AddedStuff
                       key={stuff.id}
