@@ -36,6 +36,7 @@
         }
       ]
     ],
+    "jsEngine": "hermes",
     "experiments": {
       "typedRoutes": true
     },

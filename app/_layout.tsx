@@ -1,5 +1,3 @@
-import "react-native-reanimated";
-
 import { PortalProvider } from "@gorhom/portal";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
