@@ -123,7 +123,7 @@ android {
             
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             // crunchPngs (findProperty('android.enablePngCrunchInReleaseBuilds')?.toBoolean() ?: true)
-            crunchPngs: false
+            crunchPngs false
         }
     }
     packagingOptions {
