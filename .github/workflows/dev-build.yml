@@ -20,11 +20,13 @@ jobs:
             ~/.gradle/caches
             ~/.gradle/wrapper
           key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
 
       - name: Setup JDK
         uses: actions/setup-java@v3
         with:
-          distribution: temurin
+          distribution: "temurin"
           java-version: 17
 
       - name: Setup Node.js
@@ -38,6 +40,9 @@ jobs:
 
       - name: TypeScript check
         run: npx tsc --noEmit
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
 
       - name: Prebuild Android
         run: npx expo prebuild --platform android --non-interactive
