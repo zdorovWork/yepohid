@@ -76,3 +76,18 @@ export const HIKE_BEDROOM_TYPES = {
 } as const;
 
 export type THikeBedroomType = (typeof HIKE_BEDROOM_TYPES)[keyof typeof HIKE_BEDROOM_TYPES];
+
+export const HIKE_TRAVEL_TYPES = {
+  pedestrian: "pedestrian",
+  bicycle: "bicycle",
+  camp: "camp",
+} as const;
+
+export type THikeTravelType = (typeof HIKE_TRAVEL_TYPES)[keyof typeof HIKE_TRAVEL_TYPES];
+
+export const HIKE_SEASON_TYPES = {
+  summer: "summer",
+  offSeason: "offSeason",
+} as const;
+
+export type THikeSeasonType = (typeof HIKE_SEASON_TYPES)[keyof typeof HIKE_SEASON_TYPES];

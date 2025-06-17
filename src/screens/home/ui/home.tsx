@@ -10,6 +10,8 @@ import { Routes } from "shared/config/routes";
 import { useModal } from "shared/ui/modal";
 import { PageLayout } from "shared/ui/page_layout";
 
+import { TagImage } from "./tag-image";
+
 type TCreateHikeListModalResponse = {
   hikeListId: string;
 };
@@ -39,7 +41,8 @@ export const HomeScreen = () => {
             <Pressable key={id} onPress={() => redirectToList(id)}>
               <View style={styles.listItem}>
                 <Text>{list.title}</Text>
-                <Text>{list.tags.join(", ")}</Text>
+                {/* <Text>{list.tags.join(", ")}</Text> */}
+                <TagImage tags={list.tags} />
               </View>
             </Pressable>
           ))}

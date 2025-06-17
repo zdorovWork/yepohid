@@ -1,7 +1,16 @@
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
-import { HIKE_BEDROOM_TYPES, HIKE_KITCHEN_TYPES, THikeBedroomType, THikeKitchenType } from "shared/config/types";
+import {
+  HIKE_BEDROOM_TYPES,
+  HIKE_KITCHEN_TYPES,
+  HIKE_SEASON_TYPES,
+  HIKE_TRAVEL_TYPES,
+  THikeBedroomType,
+  THikeKitchenType,
+  THikeSeasonType,
+  THikeTravelType,
+} from "shared/config/types";
 import { Modal } from "shared/ui/modal";
 
 import { getBedroomInitialHikeTopic } from "../lib/hike-topic/bedroom";
@@ -25,17 +34,35 @@ const kitchenTitleMapper: Record<THikeKitchenType, string> = {
   integrationSystem: "Integration system",
 };
 
+const travelTitleMapper: Record<THikeTravelType, string> = {
+  pedestrian: "Pedestrian",
+  bicycle: "Bicycle",
+  camp: "Camp",
+};
+
+const seasonTitleMapper: Record<THikeSeasonType, string> = {
+  summer: "Summer",
+  offSeason: "Off season",
+};
+
 export const CreateHikeListModal = ({ closeModal }: TCreateHikeListModalProps) => {
   const { addList } = useHikeList();
   const [listName, setListName] = useState("");
 
-  const [kitchenType, setKitchenType] = useState<THikeKitchenType>("cauldron");
-  const [bedroomType, setBedroomType] = useState<THikeBedroomType>("awning");
+  const [selectedKitchenType, setSelectedKitchenType] = useState<THikeKitchenType>("cauldron");
+  const [selectedTravelType, setSelectedTravelType] = useState<THikeTravelType>("pedestrian");
+  const [selectedBedroomType, setSelectedBedroomType] = useState<THikeBedroomType>("awning");
+  const [selectedSeasonType, setSelectedSeasonType] = useState<THikeSeasonType>("summer");
 
   const handleCreateHikeList = () => {
     const listId = (Math.random() + 1).toString(36).substring(7);
 
-    const listTags: THikeList["tags"] = [kitchenType, bedroomType];
+    const listTags: THikeList["tags"] = [
+      selectedKitchenType,
+      selectedBedroomType,
+      selectedTravelType,
+      selectedSeasonType,
+    ];
 
     const listItems: THikeList["items"] = [getBedroomInitialHikeTopic(listTags), getKitchenInitialHikeTopic(listTags)];
 
@@ -61,15 +88,29 @@ export const CreateHikeListModal = ({ closeModal }: TCreateHikeListModalProps) =
           onChange={(e) => setListName(e.nativeEvent.text)}
         />
         <View style={styles.actions}>
+          {Object.values(HIKE_TRAVEL_TYPES).map((travelType) => (
+            <Pressable key={travelType} style={styles.listName} onPress={() => setSelectedTravelType(travelType)}>
+              <Text>{travelTitleMapper[travelType]}</Text>
+            </Pressable>
+          ))}
+        </View>
+        <View style={styles.actions}>
+          {Object.values(HIKE_SEASON_TYPES).map((seasonType) => (
+            <Pressable key={seasonType} style={styles.listName} onPress={() => setSelectedSeasonType(seasonType)}>
+              <Text>{seasonTitleMapper[seasonType]}</Text>
+            </Pressable>
+          ))}
+        </View>
+        <View style={styles.actions}>
           {Object.values(HIKE_KITCHEN_TYPES).map((kitchenType) => (
-            <Pressable key={kitchenType} style={styles.listName} onPress={() => setKitchenType(kitchenType)}>
+            <Pressable key={kitchenType} style={styles.listName} onPress={() => setSelectedKitchenType(kitchenType)}>
               <Text>{kitchenTitleMapper[kitchenType]}</Text>
             </Pressable>
           ))}
         </View>
         <View style={styles.actions}>
           {Object.values(HIKE_BEDROOM_TYPES).map((bedroomType) => (
-            <Pressable key={bedroomType} style={styles.listName} onPress={() => setBedroomType(bedroomType)}>
+            <Pressable key={bedroomType} style={styles.listName} onPress={() => setSelectedBedroomType(bedroomType)}>
               <Text>{bedroomTitleMapper[bedroomType]}</Text>
             </Pressable>
           ))}
