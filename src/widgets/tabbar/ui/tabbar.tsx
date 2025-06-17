@@ -33,7 +33,7 @@ export const HomeTab = () => (
 );
 
 export const AddNewListTab = ({ onPress }: { onPress: () => void }) => (
-  <TabComponent key={Routes.LISTS} onPress={onPress} icon={null} text={"Додати"} />
+  <TabComponent key={Routes.LISTS} onPress={onPress} icon={<CrossIcon rotation={45} />} text={"Додати"} />
 );
 
 export const EditTab = ({ onPress }: { onPress: () => void }) => (
@@ -45,21 +45,21 @@ export const HideSelectedTab = ({ onPress }: { onPress: () => void }) => (
 );
 
 export const CrossTab = ({ onPress }: { onPress: () => void }) => (
-  <TabComponent key={"cross"} onPress={onPress} icon={<CrossIcon />} text={""} />
+  <TabComponent key={"cross"} onPress={onPress} icon={<CrossIcon />} text={"Скасувати"} />
 );
 
 export const CheckTab = ({ onPress }: { onPress: () => void }) => (
-  <TabComponent key={"check"} onPress={onPress} icon={<CheckmarkIcon />} text={""} />
+  <TabComponent key={"check"} onPress={onPress} icon={<CheckmarkIcon />} text={"Зберегти"} />
 );
 
 const styles = StyleSheet.create({
   tabBar: {
     flexDirection: "row",
     backgroundColor: "#fff",
-    paddingTop: 10,
+    paddingTop: 5,
     borderTopWidth: 1,
     borderTopColor: "#ccc",
-    // justifyContent: "space-around",
+    height: 100,
   },
   tabButton: {
     padding: 10,

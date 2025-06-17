@@ -37,8 +37,6 @@ export const ListScreen = () => {
     getTopicStuffSelectedCount,
   } = useListScreen({ listId: id });
 
-  console.log(addedStuff);
-
   const renderEditableStuffItem = (topicId: THikeTopicName, stuff: TStuffItem) => {
     const isAddedStuff = addedStuff[topicId]?.some((addedStuffItem) => addedStuffItem.id === stuff.id);
 
