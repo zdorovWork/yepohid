@@ -33,7 +33,16 @@ export const HomeTab = () => (
 );
 
 export const AddNewListTab = ({ onPress }: { onPress: () => void }) => (
-  <TabComponent key={Routes.LISTS} onPress={onPress} icon={<CrossIcon rotation={45} />} text={"Додати"} />
+  <TabComponent
+    key={Routes.LISTS}
+    onPress={onPress}
+    icon={
+      <View style={styles.addNewButton}>
+        <CrossIcon rotation={45} color={"#fff"} strokeWidth={2} />
+      </View>
+    }
+    text={"Створити новий"}
+  />
 );
 
 export const EditTab = ({ onPress }: { onPress: () => void }) => (
@@ -69,5 +78,11 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 14,
     textAlign: "center",
+  },
+  addNewButton: {
+    backgroundColor: "#75a93a",
+    padding: 4,
+    borderRadius: "100%",
+    transform: [{ scale: 0.8 }],
   },
 });
