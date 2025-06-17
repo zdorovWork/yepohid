@@ -53,13 +53,6 @@ export const ViewList = ({
         />
       }
     >
-      {/* <ScrollView contentContainerStyle={styles.list}>
-        {items.map((hikeItem) => (
-          <HikeCard key={hikeItem.id} progress={renderProgress(hikeItem)} title={hikeItem.title}>
-            {hikeItem.stuff.filter(isVisible).map((stuff) => renderStuff(stuff))}
-          </HikeCard>
-        ))}
-      </ScrollView> */}
       <FlashList
         contentContainerStyle={styles.list}
         data={items}
