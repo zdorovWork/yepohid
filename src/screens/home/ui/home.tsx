@@ -7,6 +7,7 @@ import { CreateHikeListModal, useHikeList } from "features/hikeList";
 import { AddNewListTab, TabBar } from "widgets/tabbar";
 
 import { Routes } from "shared/config/routes";
+import { TrashIcon } from "shared/ui/icons/trash-icon";
 import { useModal } from "shared/ui/modal";
 import { PageLayout } from "shared/ui/page_layout";
 
@@ -17,7 +18,7 @@ type TCreateHikeListModalResponse = {
 };
 
 export const HomeScreen = () => {
-  const { lists } = useHikeList();
+  const { lists, removeList } = useHikeList();
   const createListModal = useModal<TCreateHikeListModalResponse>()(CreateHikeListModal);
 
   const redirectToList = (id: string) => {
@@ -41,7 +42,7 @@ export const HomeScreen = () => {
             <Pressable key={id} onPress={() => redirectToList(id)}>
               <View style={styles.listItem}>
                 <Text>{list.title}</Text>
-                {/* <Text>{list.tags.join(", ")}</Text> */}
+                <TrashIcon onPress={() => removeList(id)} />
                 <TagImage tags={list.tags} />
               </View>
             </Pressable>

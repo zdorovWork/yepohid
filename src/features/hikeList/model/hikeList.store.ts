@@ -10,6 +10,7 @@ type THikeListState = {
 
   addList: (list: THikeList) => void;
   saveList: (list: THikeList) => void;
+  removeList: (id: THikeList["id"]) => void;
 };
 
 export const useHikeList = create<THikeListState>()(
@@ -23,6 +24,9 @@ export const useHikeList = create<THikeListState>()(
       },
       saveList: (list) => {
         set((state) => ({ lists: { ...state.lists, [list.id]: list } }));
+      },
+      removeList: (id) => {
+        set((state) => ({ lists: Object.fromEntries(Object.entries(state.lists).filter(([key]) => key !== id)) }));
       },
     }),
     {
