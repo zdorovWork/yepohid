@@ -10,7 +10,7 @@ type TCircularProgressProps = {
   strokeWidth?: number;
 };
 
-export const UICircularProgress = ({ size = 100, strokeWidth = 10, max, current }: TCircularProgressProps) => {
+export const UICircularProgress = ({ size = 48, strokeWidth = 5, max, current }: TCircularProgressProps) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const progress = (current / max) * 100;

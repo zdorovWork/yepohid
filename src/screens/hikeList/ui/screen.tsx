@@ -1,105 +1,102 @@
-import { useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 import { Stack, useLocalSearchParams } from "expo-router";
 
-import { HikeCard, TStuffItem } from "entities/hikeItem";
-
-import { useHikeList } from "features/hikeList";
-import { THikeList } from "features/hikeList/model/types";
-
-import { CheckTab, CrossTab, EditTab, HideSelectedTab, HomeTab, TabBar } from "widgets/tabbar";
+import { THikeTopic, TStuffItem } from "entities/hikeItem";
 
 import { THikeTopicName } from "shared/config/types";
 import { UICheckbox } from "shared/ui/components/ui-checkbox";
 import { UICircularProgress } from "shared/ui/components/ui-circular-progress";
 import { UIToggle } from "shared/ui/components/ui-toggle";
-import { CrossIcon } from "shared/ui/icons/cross-icon";
-import { PageLayout } from "shared/ui/page_layout";
 
-import { useAddedStuff } from "../model/use-added-stuff";
-import { useDisabledStuff } from "../model/use-disabled-stuff";
-import { useSelectedStuff } from "../model/use-selected-stuff";
+import { useListScreen } from "../model/use-list-screen";
 import { AddedStuff } from "./added-stuff";
+import { EditList } from "./edit-list";
+import { ViewList } from "./view-list";
 
 export const ListScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { lists, saveList } = useHikeList();
-  const hikeList = lists[id];
 
-  const { selectedIds, toggleStuffSelected } = useSelectedStuff({ listId: id });
-  const { disabledIds, toggleStuffEnabled, resetDisabledToInitial } = useDisabledStuff({
-    initial: hikeList.disabledStuffNames,
-  });
-  const { addedStuff, addNewStuff, changeAddedStuffTitle, removeAddedStuff, resetAddedToInitial } = useAddedStuff({
-    initial: hikeList.customStuff,
-  });
+  const {
+    list,
+    isEditing,
+    addedStuff,
+    disabledIds,
+    selectedIds,
+    handleEdit,
+    handleSubmitEditing,
+    handleCancelEditing,
+    addNewStuff,
+    changeAddedStuffTitle,
+    removeAddedStuff,
+    toggleStuffEnabled,
+    toggleStuffSelected,
+    isStuffEnabled,
+    isStuffSelected,
+    getTopicStuffMaxCount,
+    getTopicStuffSelectedCount,
+  } = useListScreen({ listId: id });
 
-  const [isHidingSelected, setIsHidingSelected] = useState(false);
-  const [isEditing, setIsEditing] = useState(false); // TODO: add separate page for editing, to prevent handle this state through the all component
+  const renderEditableStuffItem = (topicId: THikeTopicName, stuff: TStuffItem) => {
+    const isAddedStuff = addedStuff[stuff.id];
 
-  const saveListChanges = () => {
-    const newList: THikeList = {
-      ...hikeList,
-      customStuff: addedStuff,
-      disabledStuffNames: disabledIds,
-    };
-
-    saveList(newList);
-  };
-
-  const getHikeTopicSelectedCount = (topicId: THikeTopicName) => {
-    return lists[id]?.items
-      .find((item) => item.id === topicId)
-      ?.stuff.concat(addedStuff[topicId] || [])
-      .filter((stuff) => selectedIds.includes(stuff.id) && !disabledIds.includes(stuff.id)).length;
-  };
-
-  const renderStuffItem = (stuff: TStuffItem<THikeTopicName>, index: number) => {
-    const checked = !!selectedIds?.includes(stuff.id);
-    const enabled = !disabledIds?.includes(stuff.id);
-
-    if (isEditing) {
+    if (isAddedStuff) {
       return (
-        <View key={stuff.id} style={{ justifyContent: "space-between", flexDirection: "row", alignItems: "center" }}>
-          <Text>{stuff.title}</Text>
-          <UIToggle value={enabled} onValueChange={() => toggleStuffEnabled(stuff.id)} />
-        </View>
+        <AddedStuff
+          key={stuff.id}
+          onChangeText={(title) => changeAddedStuffTitle(topicId, stuff.id, title)}
+          onToggle={() => toggleStuffEnabled(stuff.id)}
+          onRemove={() => removeAddedStuff(topicId, stuff.id)}
+          enabled={isStuffEnabled(stuff)}
+          text={stuff.title}
+        />
       );
     }
 
-    const isHidden = (isHidingSelected && checked) || !enabled;
-
-    if (isHidden) return null;
-
     return (
-      <UICheckbox
-        key={stuff.id}
-        text={<Text>{stuff.title}</Text>}
-        checked={checked}
-        onPress={() => toggleStuffSelected(stuff.id)}
-      />
+      <View key={stuff.id} style={{ justifyContent: "space-between", flexDirection: "row", alignItems: "center" }}>
+        <Text>{stuff.title}</Text>
+        <UIToggle value={isStuffEnabled(stuff)} onValueChange={() => toggleStuffEnabled(stuff.id)} />
+      </View>
     );
   };
 
-  const handleCancelEditing = () => {
-    resetDisabledToInitial();
-    resetAddedToInitial();
-    setIsEditing(false);
-  };
-
-  const handleSubmitEditing = () => {
-    saveListChanges();
-    setIsEditing(false);
-  };
-
-  if (!hikeList) return null;
+  const renderProgress = (item: THikeTopic) => (
+    <UICircularProgress current={getTopicStuffSelectedCount(item.stuff)} max={getTopicStuffMaxCount(item.stuff)} />
+  );
 
   return (
     <>
-      <Stack.Screen options={{ title: lists[id].title }} />
+      <Stack.Screen options={{ title: list.title }} />
 
-      <PageLayout
+      {isEditing ? (
+        <EditList
+          items={list.items}
+          onSubmit={handleSubmitEditing}
+          onCancel={handleCancelEditing}
+          onAddNewStuff={addNewStuff}
+          renderStuff={renderEditableStuffItem}
+          renderProgress={renderProgress}
+        />
+      ) : (
+        <ViewList
+          items={list.items}
+          handleEdit={handleEdit}
+          selectedIds={selectedIds}
+          disabledIds={disabledIds}
+          renderProgress={renderProgress}
+          renderStuff={(stuff) => (
+            <UICheckbox
+              key={stuff.id}
+              text={<Text>{stuff.title}</Text>}
+              checked={isStuffSelected(stuff)}
+              onPress={() => toggleStuffSelected(stuff.id)}
+            />
+          )}
+        />
+      )}
+
+      {/* <PageLayout
         tabbar={
           <TabBar
             tabs={
@@ -171,26 +168,7 @@ export const ListScreen = () => {
             </HikeCard>
           ))}
         </ScrollView>
-      </PageLayout>
+      </PageLayout> */}
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  list: {
-    gap: 16,
-    padding: 16,
-    paddingBottom: 150,
-  },
-  progress: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: "#75a93a",
-  },
-  addNewElement: {
-    flexDirection: "column",
-    alignItems: "center",
-    gap: 4,
-  },
-});

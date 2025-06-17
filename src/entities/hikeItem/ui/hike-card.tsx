@@ -1,18 +1,15 @@
 import { Children, ReactNode, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import { THikeTopicName } from "shared/config/types";
 import { ArrowIcon } from "shared/ui/icons/ui-arrow";
 
-import { THikeTopic } from "../model/types";
-
 type THikeCardProps = {
-  hikeItem: THikeTopic<THikeTopicName>;
+  title: string;
   progress: ReactNode;
   children: ReactNode;
 };
 
-export const HikeCard = ({ hikeItem, progress, children }: THikeCardProps) => {
+export const HikeCard = ({ title, progress, children }: THikeCardProps) => {
   const [collapsed, setCollapsed] = useState(true);
 
   return (
@@ -20,7 +17,7 @@ export const HikeCard = ({ hikeItem, progress, children }: THikeCardProps) => {
       <Pressable style={styles.header} onPress={() => setCollapsed(!collapsed)}>
         <View style={styles.titleWrapper}>
           {progress}
-          <Text style={{ fontWeight: "bold", fontSize: 18 }}>{hikeItem.title}</Text>
+          <Text style={{ fontWeight: "bold", fontSize: 18 }}>{title}</Text>
         </View>
         <ArrowIcon width={48} height={48} style={[collapsed && styles.collapsedArrow]} />
       </Pressable>
