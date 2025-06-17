@@ -1,5 +1,5 @@
 import { Children, ReactNode, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
 
 import { ArrowIcon } from "shared/ui/icons/ui-arrow";
 
@@ -7,13 +7,15 @@ type THikeCardProps = {
   title: string;
   progress: ReactNode;
   children: ReactNode;
+
+  style?: StyleProp<ViewStyle>;
 };
 
-export const HikeCard = ({ title, progress, children }: THikeCardProps) => {
+export const HikeCard = ({ title, progress, children, style }: THikeCardProps) => {
   const [collapsed, setCollapsed] = useState(true);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       <Pressable style={styles.header} onPress={() => setCollapsed(!collapsed)}>
         <View style={styles.titleWrapper}>
           {progress}

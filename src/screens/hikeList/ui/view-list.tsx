@@ -1,5 +1,7 @@
 import { ReactNode, useState } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
+
+import { FlashList } from "@shopify/flash-list";
 
 import { HikeCard, THikeTopic, TStuffItem } from "entities/hikeItem";
 
@@ -51,22 +53,34 @@ export const ViewList = ({
         />
       }
     >
-      <ScrollView contentContainerStyle={styles.list}>
+      {/* <ScrollView contentContainerStyle={styles.list}>
         {items.map((hikeItem) => (
           <HikeCard key={hikeItem.id} progress={renderProgress(hikeItem)} title={hikeItem.title}>
             {hikeItem.stuff.filter(isVisible).map((stuff) => renderStuff(stuff))}
           </HikeCard>
         ))}
-      </ScrollView>
+      </ScrollView> */}
+      <FlashList
+        contentContainerStyle={styles.list}
+        data={items}
+        renderItem={({ item }) => (
+          <HikeCard progress={renderProgress(item)} title={item.title} style={styles.card}>
+            {item.stuff.filter(isVisible).map((stuff) => renderStuff(stuff))}
+          </HikeCard>
+        )}
+        estimatedItemSize={500}
+      />
     </PageLayout>
   );
 };
 
 const styles = StyleSheet.create({
   list: {
-    gap: 16,
     padding: 16,
     paddingBottom: 150,
+  },
+  card: {
+    marginBottom: 16,
   },
   progress: {
     width: 48,
