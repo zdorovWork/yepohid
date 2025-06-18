@@ -3,7 +3,7 @@ import { memo } from "react";
 import Svg, { Circle, G, Path, SvgProps } from "react-native-svg";
 
 const PedestrianIcon = (props: SvgProps) => (
-  <Svg width={80} height={80} {...props}>
+  <Svg width={80} height={80} viewBox="0 0 80 80" {...props}>
     <G
       fill="none"
       fillRule="evenodd"

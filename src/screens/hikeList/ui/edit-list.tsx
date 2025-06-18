@@ -49,7 +49,6 @@ const styles = StyleSheet.create({
   list: {
     gap: 16,
     padding: 16,
-    paddingBottom: 150,
   },
   addNewElement: {
     flexDirection: "column",

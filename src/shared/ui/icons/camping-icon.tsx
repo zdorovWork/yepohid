@@ -3,7 +3,7 @@ import { memo } from "react";
 import Svg, { G, Path, Rect, SvgProps } from "react-native-svg";
 
 const CampingIcon = (props: SvgProps) => (
-  <Svg width={80} height={80} {...props}>
+  <Svg width={80} height={80} viewBox="0 0 80 80" {...props}>
     <G fill="none" fillRule="evenodd" stroke="#000" strokeLinecap="round" strokeLinejoin="round">
       <G transform="translate(42.3 29)">
         <Path d="M3 10.7v-2a8 8 0 0 1 8-8h.7a8 8 0 0 1 8 8v2h0m3 22L1 18.7a38.3 38.3 0 0 0 21.7 0L1 32.7" />

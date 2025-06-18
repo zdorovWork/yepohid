@@ -70,7 +70,6 @@ export const ViewList = ({
 const styles = StyleSheet.create({
   list: {
     padding: 16,
-    paddingBottom: 150,
   },
   card: {
     marginBottom: 16,

@@ -5,7 +5,7 @@ export const PageLayout = ({ children, tabbar }: { children: React.ReactNode; ta
   return (
     <View style={styles.layout}>
       {children}
-      <View style={styles.tabbar}>{tabbar}</View>
+      {tabbar}
     </View>
   );
 };
@@ -13,11 +13,5 @@ export const PageLayout = ({ children, tabbar }: { children: React.ReactNode; ta
 const styles = StyleSheet.create({
   layout: {
     flex: 1,
-  },
-  tabbar: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
   },
 });

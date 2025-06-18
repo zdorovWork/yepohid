@@ -1,11 +1,13 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
+import { FlashList } from "@shopify/flash-list";
 import { Stack, router } from "expo-router";
 
 import { CreateHikeListModal, useHikeList } from "features/hikeList";
 
 import { AddNewListTab, TabBar } from "widgets/tabbar";
 
+import { ERROR_COLOR, PRIMARY_COLOR } from "shared/config/colors";
 import { Routes } from "shared/config/routes";
 import { TrashIcon } from "shared/ui/icons/trash-icon";
 import { useModal } from "shared/ui/modal";
@@ -37,17 +39,21 @@ export const HomeScreen = () => {
       <Stack.Screen options={{ headerTitle: "Equipment lists", headerBackVisible: false }} />
 
       <PageLayout tabbar={<TabBar tabs={[<AddNewListTab key={"add-new"} onPress={handleCreateHikeList} />]} />}>
-        <View style={styles.list}>
-          {Object.entries(lists).map(([id, list]) => (
-            <Pressable key={id} onPress={() => redirectToList(id)}>
-              <View style={styles.listItem}>
-                <Text>{list.title}</Text>
-                <TrashIcon onPress={() => removeList(id)} />
-                <TagImage tags={list.tags} />
+        <FlashList
+          contentContainerStyle={styles.list}
+          data={Object.values(lists)}
+          renderItem={({ item }) => (
+            <Pressable onPress={() => redirectToList(item.id)} style={styles.listItem}>
+              <Text>{item.title}</Text>
+              <View style={styles.actions}>
+                <TrashIcon onPress={() => removeList(item.id)} color={ERROR_COLOR} />
+                <TagImage tags={item.tags} />
               </View>
             </Pressable>
-          ))}
-        </View>
+          )}
+          estimatedItemSize={60}
+          keyExtractor={(item) => item.id}
+        />
       </PageLayout>
     </>
   );
@@ -55,14 +61,21 @@ export const HomeScreen = () => {
 
 const styles = StyleSheet.create({
   list: {
-    flexDirection: "column",
-    gap: 16,
-    paddingHorizontal: 16,
     paddingTop: 16,
   },
   listItem: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
+    paddingBottom: 16,
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: PRIMARY_COLOR,
+  },
+  actions: {
+    flexDirection: "row",
+    gap: 16,
     alignItems: "center",
   },
 });
