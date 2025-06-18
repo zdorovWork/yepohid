@@ -1,7 +1,5 @@
 import { useState } from "react";
 
-import { useShallow } from "zustand/react/shallow";
-
 import { TStuffItem } from "entities/hikeItem";
 
 import { THikeList, useHikeList } from "features/hikeList";
@@ -10,11 +8,10 @@ import { useAddedStuff } from "./use-added-stuff";
 import { useDisabledStuff } from "./use-disabled-stuff";
 import { useSelectedStuff } from "./use-selected-stuff";
 
-export const useListScreen = ({ listId }: { listId: string }) => {
-  const hikeList = useHikeList(useShallow((state) => state.lists[listId]));
+export const useList = ({ hikeList }: { hikeList: THikeList }) => {
   const { saveList } = useHikeList();
 
-  const { selectedIds, toggleStuffSelected } = useSelectedStuff({ listId });
+  const { selectedIds, toggleStuffSelected } = useSelectedStuff({ listId: hikeList.id });
   const { disabledIds, toggleStuffEnabled, resetDisabledToInitial } = useDisabledStuff({
     initial: hikeList.disabledStuffNames,
   });
