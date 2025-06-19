@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
+import { PRIMARY_COLOR, SECONDARY_COLOR } from "shared/config/colors";
 import {
   HIKE_BEDROOM_TYPES,
   HIKE_KITCHEN_TYPES,
@@ -11,6 +12,7 @@ import {
   THikeSeasonType,
   THikeTravelType,
 } from "shared/config/types";
+import { Typography } from "shared/ui/components/ui-typography";
 import { Modal } from "shared/ui/modal";
 
 import { getBedroomInitialHikeTopic } from "../lib/hike-topic/bedroom";
@@ -45,9 +47,12 @@ const seasonTitleMapper: Record<THikeSeasonType, string> = {
   offSeason: "Off season",
 };
 
+// type TStep = "kind" | "tags";
+
 export const CreateHikeListModal = ({ closeModal }: TCreateHikeListModalProps) => {
   const { addList } = useHikeList();
   const [listName, setListName] = useState("");
+  // const [step, setStep] = useState<TStep>("kind");
 
   const [selectedKitchenType, setSelectedKitchenType] = useState<THikeKitchenType>("cauldron");
   const [selectedTravelType, setSelectedTravelType] = useState<THikeTravelType>("pedestrian");
@@ -81,6 +86,9 @@ export const CreateHikeListModal = ({ closeModal }: TCreateHikeListModalProps) =
   return (
     <Modal>
       <View style={styles.container}>
+        <Typography strong align="center">
+          New List
+        </Typography>
         <TextInput
           value={listName}
           placeholder="Please enter equipment list name"
@@ -115,8 +123,13 @@ export const CreateHikeListModal = ({ closeModal }: TCreateHikeListModalProps) =
             </Pressable>
           ))}
         </View>
-        <Pressable style={styles.listName} onPress={handleCreateHikeList}>
-          <Text>Create</Text>
+      </View>
+      <View style={styles.footer}>
+        <Pressable style={[styles.button, styles.cancel]} onPress={() => closeModal(null)}>
+          <Typography align="center">Cancel</Typography>
+        </Pressable>
+        <Pressable style={[styles.button, styles.accept]} onPress={handleCreateHikeList}>
+          <Typography align="center">Create</Typography>
         </Pressable>
       </View>
     </Modal>
@@ -136,5 +149,23 @@ const styles = StyleSheet.create({
   actions: {
     flexDirection: "row",
     gap: 10,
+  },
+  footer: {
+    flexDirection: "row",
+    marginInline: -10,
+    marginBottom: -10,
+  },
+  button: {
+    flex: 1,
+    height: 40,
+    justifyContent: "center",
+  },
+  cancel: {
+    backgroundColor: SECONDARY_COLOR,
+    borderTopEndRadius: 10,
+  },
+  accept: {
+    backgroundColor: PRIMARY_COLOR,
+    borderTopStartRadius: 10,
   },
 });

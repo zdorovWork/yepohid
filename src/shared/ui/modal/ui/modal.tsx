@@ -43,5 +43,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     gap: 10,
     backgroundColor: "white",
+    overflow: "hidden",
   },
 });
