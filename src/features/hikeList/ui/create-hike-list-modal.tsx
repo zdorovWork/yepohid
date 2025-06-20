@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { PRIMARY_COLOR, SECONDARY_COLOR } from "shared/config/colors";
 import {
@@ -12,6 +12,7 @@ import {
   THikeSeasonType,
   THikeTravelType,
 } from "shared/config/types";
+import { UIInput } from "shared/ui/components/ui-input";
 import { Typography } from "shared/ui/components/ui-typography";
 import { Modal } from "shared/ui/modal";
 
@@ -89,10 +90,9 @@ export const CreateHikeListModal = ({ closeModal }: TCreateHikeListModalProps) =
         <Typography strong align="center">
           New List
         </Typography>
-        <TextInput
+        <UIInput
           value={listName}
           placeholder="Please enter equipment list name"
-          style={styles.listName}
           onChange={(e) => setListName(e.nativeEvent.text)}
         />
         <View style={styles.actions}>

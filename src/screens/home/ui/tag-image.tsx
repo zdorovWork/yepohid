@@ -1,29 +1,26 @@
 import { ReactNode } from "react";
 import { StyleSheet, View } from "react-native";
 
+import { Tag } from "entities/tags";
+
 import { THikeList } from "features/hikeList";
 
-import { PRIMARY_COLOR, SECONDARY_COLOR } from "shared/config/colors";
 import { HIKE_SEASON_TYPES, HIKE_TRAVEL_TYPES, THikeSeasonType, THikeTravelType } from "shared/config/types";
-import { BicycleIcon } from "shared/ui/icons/bicycle-icon";
-import { CampingIcon } from "shared/ui/icons/camping-icon";
-import { OffSeasonIcon } from "shared/ui/icons/off-season-icon";
-import { PedestrianIcon } from "shared/ui/icons/pedestrian-icon";
-import { SummerIcon } from "shared/ui/icons/summer-icon";
 
 type TTagImageProps = {
   tags: THikeList["tags"];
 };
 
 const primaryImageMapper: Record<THikeTravelType, ReactNode> = {
-  pedestrian: <PedestrianIcon width={60} height={60} />,
-  bicycle: <BicycleIcon width={60} height={60} />,
-  camp: <CampingIcon width={50} height={50} />,
+  pedestrian: <Tag tag="pedestrian" size={60} selected />,
+  bicycle: <Tag tag="bicycle" size={60} selected />,
+  camp: <Tag tag="camp" size={60} selected />,
 };
 
 const secondaryImageMapper: Record<THikeSeasonType, ReactNode> = {
-  summer: <SummerIcon width={30} height={30} />,
-  offSeason: <OffSeasonIcon width={30} height={30} />,
+  // summer: <SummerIcon width={30} height={30} />,
+  summer: <Tag tag="summer" size={30} selected />,
+  offSeason: <Tag tag="offSeason" size={30} selected />,
 };
 
 const getTravelTypeByTags = (tags: THikeList["tags"]): THikeTravelType | null => {
@@ -51,10 +48,6 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   primaryImage: {
-    backgroundColor: PRIMARY_COLOR,
-    borderRadius: "100%",
-    width: 60,
-    height: 60,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -62,9 +55,5 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     left: -15,
-    backgroundColor: SECONDARY_COLOR,
-    borderRadius: "100%",
-    width: 30,
-    height: 30,
   },
 });
