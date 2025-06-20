@@ -1,11 +1,11 @@
 import { StyleSheet, View } from "react-native";
 import { SvgProps } from "react-native-svg";
 
-import { TTagTypeProps } from "entities/tags/model/types";
-
 import { PRIMARY_COLOR } from "shared/config/colors";
 import { Typography } from "shared/ui/components/ui-typography";
 import { PedestrianIcon } from "shared/ui/icons/pedestrian-icon";
+
+import { TTagTypeProps } from "../../model/types";
 
 export const PedestrianTag = ({ withText, selected, ...svgProps }: TTagTypeProps & SvgProps) => {
   return (

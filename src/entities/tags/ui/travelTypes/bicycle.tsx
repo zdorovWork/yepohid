@@ -1,15 +1,16 @@
 import { StyleSheet, View } from "react-native";
 import { SvgProps } from "react-native-svg";
 
-import { TTagTypeProps } from "entities/tags/model/types";
-
 import { PRIMARY_COLOR } from "shared/config/colors";
 import { Typography } from "shared/ui/components/ui-typography";
+import { BicycleIcon } from "shared/ui/icons/bicycle-icon";
+
+import { TTagTypeProps } from "../../model/types";
 
 export const BicycleTag = ({ withText, selected, ...svgProps }: TTagTypeProps & SvgProps) => {
   return (
     <View style={styles.tag}>
-      <BicycleTag {...svgProps} style={[styles.icon, selected && styles.selected, svgProps.style]} />
+      <BicycleIcon {...svgProps} style={[styles.icon, selected && styles.selected, svgProps.style]} />
       {withText && <Typography>By foot</Typography>}
     </View>
   );

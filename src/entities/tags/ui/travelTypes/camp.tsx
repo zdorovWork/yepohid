@@ -1,11 +1,11 @@
 import { StyleSheet, View } from "react-native";
 import { SvgProps } from "react-native-svg";
 
-import { TTagTypeProps } from "entities/tags/model/types";
-
 import { PRIMARY_COLOR } from "shared/config/colors";
 import { Typography } from "shared/ui/components/ui-typography";
 import { CampingIcon } from "shared/ui/icons/camping-icon";
+
+import { TTagTypeProps } from "../../model/types";
 
 export const CampTag = ({ withText, selected, ...svgProps }: TTagTypeProps & SvgProps) => {
   return (
