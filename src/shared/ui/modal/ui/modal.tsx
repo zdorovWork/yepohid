@@ -44,5 +44,6 @@ const styles = StyleSheet.create({
     gap: 10,
     backgroundColor: "white",
     overflow: "hidden",
+    margin: 20,
   },
 });

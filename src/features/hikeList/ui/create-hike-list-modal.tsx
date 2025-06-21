@@ -1,17 +1,10 @@
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
+
+import { Tag } from "entities/tags";
 
 import { PRIMARY_COLOR, SECONDARY_COLOR } from "shared/config/colors";
-import {
-  HIKE_BEDROOM_TYPES,
-  HIKE_KITCHEN_TYPES,
-  HIKE_SEASON_TYPES,
-  HIKE_TRAVEL_TYPES,
-  THikeBedroomType,
-  THikeKitchenType,
-  THikeSeasonType,
-  THikeTravelType,
-} from "shared/config/types";
+import { THikeBedroomType, THikeKitchenType, THikeSeasonType, THikeTravelType } from "shared/config/types";
 import { UIInput } from "shared/ui/components/ui-input";
 import { Typography } from "shared/ui/components/ui-typography";
 import { Modal } from "shared/ui/modal";
@@ -20,40 +13,19 @@ import { getBedroomInitialHikeTopic } from "../lib/hike-topic/bedroom";
 import { getKitchenInitialHikeTopic } from "../lib/hike-topic/kitchen";
 import { useHikeList } from "../model/hikeList.store";
 import { THikeList } from "../model/types";
+import { KindStep } from "./kind-step";
+import { StuffStep } from "./stuff-step";
 
 type TCreateHikeListModalProps = {
   closeModal: (data: { hikeListId: string } | null) => void;
 };
 
-const bedroomTitleMapper: Record<THikeBedroomType, string> = {
-  tent: "Tent",
-  awning: "Awning",
-  hamac: "Hamac",
-};
-
-const kitchenTitleMapper: Record<THikeKitchenType, string> = {
-  fire: "Fire",
-  cauldron: "Cauldron",
-  integrationSystem: "Integration system",
-};
-
-const travelTitleMapper: Record<THikeTravelType, string> = {
-  pedestrian: "Pedestrian",
-  bicycle: "Bicycle",
-  camp: "Camp",
-};
-
-const seasonTitleMapper: Record<THikeSeasonType, string> = {
-  summer: "Summer",
-  offSeason: "Off season",
-};
-
-// type TStep = "kind" | "tags";
+type TStep = "kind" | "stuff";
 
 export const CreateHikeListModal = ({ closeModal }: TCreateHikeListModalProps) => {
   const { addList } = useHikeList();
   const [listName, setListName] = useState("");
-  // const [step, setStep] = useState<TStep>("kind");
+  const [step, setStep] = useState<TStep>("kind");
 
   const [selectedKitchenType, setSelectedKitchenType] = useState<THikeKitchenType>("cauldron");
   const [selectedTravelType, setSelectedTravelType] = useState<THikeTravelType>("pedestrian");
@@ -84,6 +56,26 @@ export const CreateHikeListModal = ({ closeModal }: TCreateHikeListModalProps) =
     closeModal({ hikeListId: listId });
   };
 
+  const renderAcceptButton = () => {
+    if (step === "kind") {
+      return (
+        <Pressable
+          style={[styles.button, styles.accept, !listName && styles.acceptDisabled]}
+          onPress={() => setStep("stuff")}
+          disabled={!listName}
+        >
+          <Typography align="center">Next</Typography>
+        </Pressable>
+      );
+    }
+
+    return (
+      <Pressable style={[styles.button, styles.accept]} onPress={handleCreateHikeList}>
+        <Typography align="center">Create</Typography>
+      </Pressable>
+    );
+  };
+
   return (
     <Modal>
       <View style={styles.container}>
@@ -95,42 +87,55 @@ export const CreateHikeListModal = ({ closeModal }: TCreateHikeListModalProps) =
           placeholder="Please enter equipment list name"
           onChange={(e) => setListName(e.nativeEvent.text)}
         />
-        <View style={styles.actions}>
-          {Object.values(HIKE_TRAVEL_TYPES).map((travelType) => (
-            <Pressable key={travelType} style={styles.listName} onPress={() => setSelectedTravelType(travelType)}>
-              <Text>{travelTitleMapper[travelType]}</Text>
-            </Pressable>
-          ))}
-        </View>
-        <View style={styles.actions}>
-          {Object.values(HIKE_SEASON_TYPES).map((seasonType) => (
-            <Pressable key={seasonType} style={styles.listName} onPress={() => setSelectedSeasonType(seasonType)}>
-              <Text>{seasonTitleMapper[seasonType]}</Text>
-            </Pressable>
-          ))}
-        </View>
-        <View style={styles.actions}>
-          {Object.values(HIKE_KITCHEN_TYPES).map((kitchenType) => (
-            <Pressable key={kitchenType} style={styles.listName} onPress={() => setSelectedKitchenType(kitchenType)}>
-              <Text>{kitchenTitleMapper[kitchenType]}</Text>
-            </Pressable>
-          ))}
-        </View>
-        <View style={styles.actions}>
-          {Object.values(HIKE_BEDROOM_TYPES).map((bedroomType) => (
-            <Pressable key={bedroomType} style={styles.listName} onPress={() => setSelectedBedroomType(bedroomType)}>
-              <Text>{bedroomTitleMapper[bedroomType]}</Text>
-            </Pressable>
-          ))}
+
+        <View style={styles.content}>
+          {
+            {
+              kind: (
+                <KindStep
+                  renderTravelOption={(travelType) => (
+                    <Pressable key={travelType} style={styles.action} onPress={() => setSelectedTravelType(travelType)}>
+                      <Tag tag={travelType} size={60} selected={travelType === selectedTravelType} withText />
+                    </Pressable>
+                  )}
+                  renderSeasonOption={(seasonType) => (
+                    <Pressable key={seasonType} style={styles.action} onPress={() => setSelectedSeasonType(seasonType)}>
+                      <Tag tag={seasonType} size={60} selected={seasonType === selectedSeasonType} withText />
+                    </Pressable>
+                  )}
+                />
+              ),
+              stuff: (
+                <StuffStep
+                  renderBedroomOption={(bedroomType) => (
+                    <Pressable
+                      key={bedroomType}
+                      style={styles.action}
+                      onPress={() => setSelectedBedroomType(bedroomType)}
+                    >
+                      <Tag tag={bedroomType} size={60} selected={bedroomType === selectedBedroomType} withText />
+                    </Pressable>
+                  )}
+                  renderKitchenOption={(kitchenType) => (
+                    <Pressable
+                      key={kitchenType}
+                      style={styles.action}
+                      onPress={() => setSelectedKitchenType(kitchenType)}
+                    >
+                      <Tag tag={kitchenType} size={60} selected={kitchenType === selectedKitchenType} withText />
+                    </Pressable>
+                  )}
+                />
+              ),
+            }[step]
+          }
         </View>
       </View>
       <View style={styles.footer}>
         <Pressable style={[styles.button, styles.cancel]} onPress={() => closeModal(null)}>
           <Typography align="center">Cancel</Typography>
         </Pressable>
-        <Pressable style={[styles.button, styles.accept]} onPress={handleCreateHikeList}>
-          <Typography align="center">Create</Typography>
-        </Pressable>
+        {renderAcceptButton()}
       </View>
     </Modal>
   );
@@ -142,13 +147,20 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ccc",
   },
+  content: {
+    flexDirection: "column",
+    paddingBlock: 10,
+    gap: 20,
+  },
   container: {
     flexDirection: "column",
     gap: 10,
   },
-  actions: {
-    flexDirection: "row",
-    gap: 10,
+  action: {
+    flexBasis: "33%",
+    flexGrow: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
   footer: {
     flexDirection: "row",
@@ -167,5 +179,8 @@ const styles = StyleSheet.create({
   accept: {
     backgroundColor: PRIMARY_COLOR,
     borderTopStartRadius: 10,
+  },
+  acceptDisabled: {
+    backgroundColor: SECONDARY_COLOR,
   },
 });

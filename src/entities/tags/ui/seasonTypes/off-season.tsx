@@ -1,29 +1,20 @@
-import { StyleSheet, View } from "react-native";
 import { SvgProps } from "react-native-svg";
 
 import { ORANGE_COLOR } from "shared/config/colors";
-import { Typography } from "shared/ui/components/ui-typography";
 import { OffSeasonIcon } from "shared/ui/icons/off-season-icon";
 
 import { TTagTypeProps } from "../../model/types";
+import { TagWrapper } from "../tag-wrapper";
 
-export const OffSeasonTag = ({ withText, selected, ...svgProps }: TTagTypeProps & SvgProps) => {
+export const OffSeasonTag = ({ withText, selected, style, ...svgProps }: TTagTypeProps & SvgProps) => {
   return (
-    <View style={[styles.tag, selected && styles.selected]}>
-      <OffSeasonIcon {...svgProps} />
-      {withText && <Typography>Off Season</Typography>}
-    </View>
+    <TagWrapper
+      text="Off Season"
+      icon={<OffSeasonIcon {...svgProps} />}
+      selectedColor={ORANGE_COLOR}
+      withText={withText}
+      selected={selected}
+      style={style}
+    />
   );
 };
-
-const styles = StyleSheet.create({
-  tag: {
-    flexDirection: "column",
-    justifyContent: "center",
-    gap: 10,
-    borderRadius: "100%",
-  },
-  selected: {
-    backgroundColor: ORANGE_COLOR,
-  },
-});

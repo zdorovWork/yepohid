@@ -30,8 +30,6 @@ export const HomeScreen = () => {
   const handleCreateHikeList = async () => {
     const response = await createListModal.showModal({});
 
-    console.log("response", response);
-
     if (response?.hikeListId) {
       redirectToList(response.hikeListId);
     }

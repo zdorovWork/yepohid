@@ -1,16 +1,16 @@
 import { SvgProps } from "react-native-svg";
 
 import { PRIMARY_COLOR } from "shared/config/colors";
-import { PedestrianIcon } from "shared/ui/icons/pedestrian-icon";
+import { TentIcon } from "shared/ui/icons/tent-icon";
 
 import { TTagTypeProps } from "../../model/types";
 import { TagWrapper } from "../tag-wrapper";
 
-export const PedestrianTag = ({ withText, selected, ...svgProps }: TTagTypeProps & SvgProps) => {
+export const TentTag = ({ withText, selected, ...svgProps }: TTagTypeProps & SvgProps) => {
   return (
     <TagWrapper
-      text="By foot"
-      icon={<PedestrianIcon {...svgProps} />}
+      text="Tent"
+      icon={<TentIcon {...svgProps} />}
       selectedColor={PRIMARY_COLOR}
       withText={withText}
       selected={selected}

@@ -4,10 +4,14 @@ import { SvgProps } from "react-native-svg";
 import { THikeBedroomType, THikeKitchenType, THikeSeasonType, THikeTravelType } from "shared/config/types";
 
 import { TTagTypeProps } from "../model/types";
+import { AwningTag } from "./bedroomTypes/awning";
+import { HamacTag } from "./bedroomTypes/hamac";
+import { TentTag } from "./bedroomTypes/tent";
+import { CauldronTag } from "./kitchenTypes/cauldron";
+import { FireTag } from "./kitchenTypes/fire";
+import { IntegrationSystemTag } from "./kitchenTypes/integration-system";
 import { OffSeasonTag } from "./seasonTypes/off-season";
 import { SummerTag } from "./seasonTypes/summer";
-import { AwningTag } from "./tagTypes/awning";
-import { TentTag } from "./tagTypes/tent";
 import { BicycleTag } from "./travelTypes/bicycle";
 import { CampTag } from "./travelTypes/camp";
 import { PedestrianTag } from "./travelTypes/pedestrian";
@@ -23,9 +27,9 @@ export const Tag = ({ tag, size, ...tagTypeProps }: TTagProps & TTagTypeProps) =
   const iconProps: SvgProps = size ? { width: size, height: size } : {};
 
   const tagMapper: Record<TTag, ReactNode> = {
-    tent: <TentTag />,
-    awning: <AwningTag />,
-    hamac: null,
+    tent: <TentTag {...iconProps} {...tagTypeProps} />,
+    awning: <AwningTag {...iconProps} {...tagTypeProps} />,
+    hamac: <HamacTag {...iconProps} {...tagTypeProps} />,
 
     summer: <SummerTag {...iconProps} {...tagTypeProps} />,
     offSeason: <OffSeasonTag {...iconProps} {...tagTypeProps} />,
@@ -34,9 +38,9 @@ export const Tag = ({ tag, size, ...tagTypeProps }: TTagProps & TTagTypeProps) =
     bicycle: <BicycleTag {...iconProps} {...tagTypeProps} />,
     camp: <CampTag {...iconProps} {...tagTypeProps} />,
 
-    fire: null,
-    cauldron: null,
-    integrationSystem: null,
+    fire: <FireTag {...iconProps} {...tagTypeProps} />,
+    cauldron: <CauldronTag {...iconProps} {...tagTypeProps} />,
+    integrationSystem: <IntegrationSystemTag {...iconProps} {...tagTypeProps} />,
   };
 
   return tagMapper[tag];

@@ -1,16 +1,16 @@
 import { SvgProps } from "react-native-svg";
 
 import { PRIMARY_COLOR } from "shared/config/colors";
-import { PedestrianIcon } from "shared/ui/icons/pedestrian-icon";
+import { IntegrationSystemIcon } from "shared/ui/icons/integration-system-icon";
 
 import { TTagTypeProps } from "../../model/types";
 import { TagWrapper } from "../tag-wrapper";
 
-export const PedestrianTag = ({ withText, selected, ...svgProps }: TTagTypeProps & SvgProps) => {
+export const IntegrationSystemTag = ({ withText, selected, ...svgProps }: TTagTypeProps & SvgProps) => {
   return (
     <TagWrapper
-      text="By foot"
-      icon={<PedestrianIcon {...svgProps} />}
+      text="Integration System"
+      icon={<IntegrationSystemIcon {...svgProps} />}
       selectedColor={PRIMARY_COLOR}
       withText={withText}
       selected={selected}
