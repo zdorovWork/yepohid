@@ -56,6 +56,8 @@ export const ViewList = ({
       <FlashList
         contentContainerStyle={styles.list}
         data={items}
+        extraData={{ selectedIds, disabledIds, isHidingSelected }}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <HikeCard progress={renderProgress(item)} title={item.title} style={styles.card}>
             {item.stuff.filter(isVisible).map((stuff) => renderStuff(stuff))}
