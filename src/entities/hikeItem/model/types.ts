@@ -11,4 +11,4 @@ export type THikeTopic<TopicName extends THikeTopicName = THikeTopicName> = {
   stuff: TStuffItem<TopicName>[];
 };
 
-export type TAddedStuff = Record<string, TStuffItem<THikeTopicName>[]>;
+export type TAddedStuff = { [key in THikeTopicName]?: TStuffItem[] };

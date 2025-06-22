@@ -9,8 +9,17 @@ import { UIInput } from "shared/ui/components/ui-input";
 import { Typography } from "shared/ui/components/ui-typography";
 import { Modal } from "shared/ui/modal";
 
-import { getBedroomInitialHikeTopic } from "../lib/hike-topic/bedroom";
-import { getKitchenInitialHikeTopic } from "../lib/hike-topic/kitchen";
+import { useBedroomTopic } from "../lib/hike-topic/use-bedroom-topic";
+import { useClothingTopic } from "../lib/hike-topic/use-clothing-topic";
+import { useDocumentsTopic } from "../lib/hike-topic/use-documents-topic";
+import { useElectronicsTopic } from "../lib/hike-topic/use-electronics-topic";
+import { useFirstAidTopic } from "../lib/hike-topic/use-first-aid-topic";
+import { useFoodTopic } from "../lib/hike-topic/use-food-topic";
+import { useGearTopic } from "../lib/hike-topic/use-gear-topic";
+import { useHygieneTopic } from "../lib/hike-topic/use-hygiene-topic";
+import { useKitchenTopic } from "../lib/hike-topic/use-kitchen-topic";
+import { useNavigationTopic } from "../lib/hike-topic/use-navigation-topic";
+import { useOtherTopic } from "../lib/hike-topic/use-other-topic";
 import { useHikeList } from "../model/hikeList.store";
 import { THikeList } from "../model/types";
 import { KindStep } from "./kind-step";
@@ -32,6 +41,18 @@ export const CreateHikeListModal = ({ closeModal }: TCreateHikeListModalProps) =
   const [selectedBedroomType, setSelectedBedroomType] = useState<THikeBedroomType>("awning");
   const [selectedSeasonType, setSelectedSeasonType] = useState<THikeSeasonType>("summer");
 
+  const { getBedroomInitialHikeTopic } = useBedroomTopic();
+  const { getKitchenInitialHikeTopic } = useKitchenTopic();
+  const { getHygieneInitialHikeTopic } = useHygieneTopic();
+  const { getGearInitialHikeTopic } = useGearTopic();
+  const { getNavigationInitialHikeTopic } = useNavigationTopic();
+  const { getElectronicsInitialHikeTopic } = useElectronicsTopic();
+  const { getDocumentsInitialHikeTopic } = useDocumentsTopic();
+  const { getOtherInitialHikeTopic } = useOtherTopic();
+  const { getClothingInitialHikeTopic } = useClothingTopic();
+  const { getFirstAidInitialHikeTopic } = useFirstAidTopic();
+  const { getFoodInitialHikeTopic } = useFoodTopic();
+
   const handleCreateHikeList = () => {
     const listId = (Math.random() + 1).toString(36).substring(7);
 
@@ -42,7 +63,19 @@ export const CreateHikeListModal = ({ closeModal }: TCreateHikeListModalProps) =
       selectedSeasonType,
     ];
 
-    const listItems: THikeList["items"] = [getBedroomInitialHikeTopic(listTags), getKitchenInitialHikeTopic(listTags)];
+    const listItems: THikeList["items"] = [
+      getBedroomInitialHikeTopic(listTags),
+      getKitchenInitialHikeTopic(listTags),
+      getHygieneInitialHikeTopic(),
+      getGearInitialHikeTopic(),
+      getNavigationInitialHikeTopic(),
+      getElectronicsInitialHikeTopic(),
+      getDocumentsInitialHikeTopic(),
+      getOtherInitialHikeTopic(),
+      getClothingInitialHikeTopic(listTags),
+      getFirstAidInitialHikeTopic(),
+      getFoodInitialHikeTopic(),
+    ];
 
     addList({
       id: listId,
