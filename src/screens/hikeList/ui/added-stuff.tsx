@@ -15,7 +15,7 @@ type TAddedStuffProps = {
 export const AddedStuff = ({ onChangeText, onToggle, onRemove, enabled, text }: TAddedStuffProps) => {
   return (
     <View style={styles.wrapper}>
-      <UIInput style={styles.input} value={text} placeholder="Нова задача" onChangeText={onChangeText} />
+      <UIInput style={styles.input} value={text} placeholder="Enter stuff name" onChangeText={onChangeText} />
       <Pressable onPress={onRemove}>
         <TrashIcon />
       </Pressable>

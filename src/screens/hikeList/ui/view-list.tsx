@@ -47,7 +47,11 @@ export const ViewList = ({
         <TabBar
           tabs={[
             <HomeTab key={"home"} />,
-            <HideSelectedTab key={"hide"} onPress={() => setIsHidingSelected((prev) => !prev)} />,
+            <HideSelectedTab
+              key={"hide"}
+              text={isHidingSelected ? "Show selected" : "Hide selected"}
+              onPress={() => setIsHidingSelected((prev) => !prev)}
+            />,
             <EditTab key={"edit"} onPress={handleEdit} />,
           ]}
         />

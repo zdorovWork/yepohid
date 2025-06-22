@@ -29,7 +29,7 @@ export const TabBar = ({ tabs }: { tabs: ReactNode[] }) => {
 };
 
 export const HomeTab = () => (
-  <TabComponent key={Routes.Home} onPress={() => router.push("/")} icon={<HomeIcon />} text={"Головна"} />
+  <TabComponent key={Routes.Home} onPress={() => router.push("/")} icon={<HomeIcon />} text={"Home"} />
 );
 
 export const AddNewListTab = ({ onPress }: { onPress: () => void }) => (
@@ -41,24 +41,24 @@ export const AddNewListTab = ({ onPress }: { onPress: () => void }) => (
         <CrossIcon rotation={45} color={"#fff"} strokeWidth={2} />
       </View>
     }
-    text={"Створити новий"}
+    text={"Create new"}
   />
 );
 
 export const EditTab = ({ onPress }: { onPress: () => void }) => (
-  <TabComponent key={"edit"} onPress={onPress} icon={<EditIcon />} text={"Редагувати"} />
+  <TabComponent key={"edit"} onPress={onPress} icon={<EditIcon />} text={"Edit"} />
 );
 
-export const HideSelectedTab = ({ onPress }: { onPress: () => void }) => (
-  <TabComponent key={"hide"} onPress={onPress} icon={<CheckedIcon />} text={"Приховати зібране"} />
+export const HideSelectedTab = ({ onPress, text }: { onPress: () => void; text: string }) => (
+  <TabComponent key={"hide"} onPress={onPress} icon={<CheckedIcon />} text={text} />
 );
 
 export const CrossTab = ({ onPress }: { onPress: () => void }) => (
-  <TabComponent key={"cross"} onPress={onPress} icon={<CrossIcon />} text={"Скасувати"} />
+  <TabComponent key={"cross"} onPress={onPress} icon={<CrossIcon />} text={"Cancel"} />
 );
 
 export const CheckTab = ({ onPress }: { onPress: () => void }) => (
-  <TabComponent key={"check"} onPress={onPress} icon={<CheckmarkIcon />} text={"Зберегти"} />
+  <TabComponent key={"check"} onPress={onPress} icon={<CheckmarkIcon />} text={"Save"} />
 );
 
 const styles = StyleSheet.create({

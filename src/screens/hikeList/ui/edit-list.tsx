@@ -36,7 +36,7 @@ export const EditList = ({ onCancel, onSubmit, items, renderProgress, renderStuf
 
             <Pressable style={styles.addNewElement} key={"add"} onPress={() => onAddNewStuff(hikeItem.id)}>
               <CrossIcon rotation={45} />
-              <Text>Додати новий елемент</Text>
+              <Text>Add new stuff</Text>
             </Pressable>
           </HikeCard>
         ))}
