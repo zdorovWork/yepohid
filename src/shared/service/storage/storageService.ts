@@ -7,7 +7,12 @@ export type TStorageImplementation = {
   removeItemImpl: (key: string) => void;
 };
 
-export const _storageService = ({ setItemImpl, getItemImpl, removeItemImpl }: TStorageImplementation): StateStorage => {
+export const _storageService = ({
+  setItemImpl,
+  getItemImpl,
+  removeItemImpl,
+  getItemImplSync,
+}: TStorageImplementation): StateStorage & { getItemSync: (key: string) => string | null } => {
   const setItem = (key: string, value: string) => {
     setItemImpl(key, value);
   };
@@ -18,9 +23,14 @@ export const _storageService = ({ setItemImpl, getItemImpl, removeItemImpl }: TS
     removeItemImpl(key);
   };
 
+  const getItemSync = (key: string) => {
+    return getItemImplSync(key);
+  };
+
   return {
     setItem,
     getItem,
     removeItem,
+    getItemSync,
   };
 };

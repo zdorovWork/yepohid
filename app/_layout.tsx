@@ -3,6 +3,8 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 
+import { LanguageProvider } from "features/language-selector";
+
 import { ModalProvider } from "shared/ui/modal";
 
 export default function RootLayout() {
@@ -16,15 +18,17 @@ export default function RootLayout() {
   }
 
   return (
-    <PortalProvider>
-      <ModalProvider>
-        <Stack>
-          <Stack.Screen name="index" />
-          <Stack.Screen name="lists/[id]" />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-      </ModalProvider>
-      <StatusBar style="auto" />
-    </PortalProvider>
+    <LanguageProvider>
+      <PortalProvider>
+        <ModalProvider>
+          <Stack>
+            <Stack.Screen name="index" />
+            <Stack.Screen name="lists/[id]" />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+        </ModalProvider>
+        <StatusBar style="auto" />
+      </PortalProvider>
+    </LanguageProvider>
   );
 }

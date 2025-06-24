@@ -4,6 +4,7 @@ import { FlashList } from "@shopify/flash-list";
 import { Stack, router } from "expo-router";
 
 import { CreateHikeListModal, useHikeList } from "features/hikeList";
+import { LanguageSelector, useLanguage } from "features/language-selector";
 
 import { AddNewListTab, TabBar } from "widgets/tabbar";
 
@@ -22,6 +23,7 @@ type TCreateHikeListModalResponse = {
 export const HomeScreen = () => {
   const { lists, removeList } = useHikeList();
   const createListModal = useModal<TCreateHikeListModalResponse>()(CreateHikeListModal);
+  const { language } = useLanguage();
 
   const redirectToList = (id: string) => {
     router.push(`/${Routes.LISTS}/${id}`);
@@ -37,7 +39,13 @@ export const HomeScreen = () => {
 
   return (
     <>
-      <Stack.Screen options={{ headerTitle: "Equipment lists", headerBackVisible: false }} />
+      <Stack.Screen
+        options={{
+          headerTitle: language === "en" ? "Equipment lists" : "Списки спорядження",
+          headerBackVisible: false,
+          headerRight: () => <LanguageSelector />,
+        }}
+      />
 
       <PageLayout tabbar={<TabBar tabs={[<AddNewListTab key={"add-new"} onPress={handleCreateHikeList} />]} />}>
         <FlashList
