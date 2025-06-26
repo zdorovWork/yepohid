@@ -1,9 +1,7 @@
 import { ReactNode } from "react";
 import { SvgProps } from "react-native-svg";
 
-import { THikeBedroomType, THikeKitchenType, THikeSeasonType, THikeTravelType } from "shared/config/types";
-
-import { TTagTypeProps } from "../model/types";
+import { TTag, TTagTypeProps } from "../model/types";
 import { AwningTag } from "./bedroomTypes/awning";
 import { HamacTag } from "./bedroomTypes/hamac";
 import { TentTag } from "./bedroomTypes/tent";
@@ -15,8 +13,6 @@ import { SummerTag } from "./seasonTypes/summer";
 import { BicycleTag } from "./travelTypes/bicycle";
 import { CampTag } from "./travelTypes/camp";
 import { PedestrianTag } from "./travelTypes/pedestrian";
-
-type TTag = THikeBedroomType | THikeKitchenType | THikeSeasonType | THikeTravelType;
 
 type TTagProps = {
   tag: TTag;

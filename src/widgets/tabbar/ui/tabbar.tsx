@@ -32,7 +32,7 @@ export const HomeTab = () => (
   <TabComponent key={Routes.Home} onPress={() => router.push("/")} icon={<HomeIcon />} text={"Home"} />
 );
 
-export const AddNewListTab = ({ onPress }: { onPress: () => void }) => (
+export const AddNewListTab = ({ onPress, text }: { onPress: () => void; text: string }) => (
   <TabComponent
     key={Routes.LISTS}
     onPress={onPress}
@@ -41,7 +41,7 @@ export const AddNewListTab = ({ onPress }: { onPress: () => void }) => (
         <CrossIcon rotation={45} color={"#fff"} strokeWidth={2} />
       </View>
     }
-    text={"Create new"}
+    text={text}
   />
 );
 
