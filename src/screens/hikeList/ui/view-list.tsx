@@ -5,11 +5,11 @@ import { FlashList } from "@shopify/flash-list";
 
 import { HikeCard, THikeTopic, TStuffItem } from "entities/hikeItem";
 
-import { THikeList } from "features/hikeList";
+import { THikeList, useTopicTranslations } from "features/hikeList";
 
 import { EditTab, HideSelectedTab, HomeTab, TabBar } from "widgets/tabbar";
 
-import { THikeStuffName } from "shared/config/types";
+import { THikeStuffName, THikeTopicName } from "shared/config/types";
 import { PageLayout } from "shared/ui/page_layout";
 
 type TViewListProps = {
@@ -18,7 +18,7 @@ type TViewListProps = {
   disabledIds: THikeStuffName[];
 
   handleEdit: () => void;
-  renderStuff: (stuff: TStuffItem) => ReactNode;
+  renderStuff: <T extends THikeTopicName>(topicId: THikeTopic<T>["id"], stuff: TStuffItem<T>) => ReactNode;
   renderProgress: (item: THikeTopic) => ReactNode;
 };
 
@@ -31,6 +31,7 @@ export const ViewList = ({
   renderStuff,
 }: TViewListProps) => {
   const [isHidingSelected, setIsHidingSelected] = useState(false);
+  const { t } = useTopicTranslations();
 
   const isVisible = (stuff: TStuffItem) => {
     const checked = !!selectedIds?.includes(stuff.id);
@@ -49,7 +50,7 @@ export const ViewList = ({
             <HomeTab key={"home"} />,
             <HideSelectedTab
               key={"hide"}
-              text={isHidingSelected ? "Show selected" : "Hide selected"}
+              checked={isHidingSelected}
               onPress={() => setIsHidingSelected((prev) => !prev)}
             />,
             <EditTab key={"edit"} onPress={handleEdit} />,
@@ -63,8 +64,8 @@ export const ViewList = ({
         extraData={{ selectedIds, disabledIds, isHidingSelected }}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <HikeCard progress={renderProgress(item)} title={item.title} style={styles.card}>
-            {item.stuff.filter(isVisible).map((stuff) => renderStuff(stuff))}
+          <HikeCard progress={renderProgress(item)} title={t(item.id)} style={styles.card}>
+            {item.stuff.filter(isVisible).map((stuff) => renderStuff(item.id, stuff))}
           </HikeCard>
         )}
         estimatedItemSize={500}

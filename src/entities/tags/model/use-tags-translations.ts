@@ -4,7 +4,7 @@ import { useI18nModule } from "shared/service/translations/use-18n-module";
 import { TTag } from "./types";
 
 export const useTagsTranslations = () => {
-  const { t } = useI18nModule({
+  return useI18nModule({
     tent: {
       en: "Tent",
       ua: "Тент",
@@ -50,8 +50,4 @@ export const useTagsTranslations = () => {
       ua: "Інтеграційна система",
     },
   } satisfies Record<TTag, Record<TLanguage, string>>);
-
-  return {
-    t,
-  };
 };

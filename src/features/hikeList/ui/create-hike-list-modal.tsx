@@ -22,6 +22,7 @@ import { useNavigationTopic } from "../lib/hike-topic/use-navigation-topic";
 import { useOtherTopic } from "../lib/hike-topic/use-other-topic";
 import { useHikeList } from "../model/hikeList.store";
 import { THikeList } from "../model/types";
+import { useModalTranslations } from "../model/use-modal-translations";
 import { KindStep } from "./kind-step";
 import { StuffStep } from "./stuff-step";
 
@@ -35,6 +36,7 @@ export const CreateHikeListModal = ({ closeModal }: TCreateHikeListModalProps) =
   const { addList } = useHikeList();
   const [listName, setListName] = useState("");
   const [step, setStep] = useState<TStep>("kind");
+  const { t } = useModalTranslations();
 
   const [selectedKitchenType, setSelectedKitchenType] = useState<THikeKitchenType>("cauldron");
   const [selectedTravelType, setSelectedTravelType] = useState<THikeTravelType>("pedestrian");
@@ -97,14 +99,14 @@ export const CreateHikeListModal = ({ closeModal }: TCreateHikeListModalProps) =
           onPress={() => setStep("stuff")}
           disabled={!listName}
         >
-          <Typography align="center">Next</Typography>
+          <Typography align="center">{t("next")}</Typography>
         </Pressable>
       );
     }
 
     return (
       <Pressable style={[styles.button, styles.accept]} onPress={handleCreateHikeList}>
-        <Typography align="center">Create</Typography>
+        <Typography align="center">{t("create")}</Typography>
       </Pressable>
     );
   };
@@ -113,11 +115,11 @@ export const CreateHikeListModal = ({ closeModal }: TCreateHikeListModalProps) =
     <Modal>
       <View style={styles.container}>
         <Typography strong align="center">
-          New List
+          {t("new_list")}
         </Typography>
         <UIInput
           value={listName}
-          placeholder="Please enter equipment list name"
+          placeholder={t("please_enter_equipment_list_name")}
           onChange={(e) => setListName(e.nativeEvent.text)}
         />
 
@@ -166,7 +168,7 @@ export const CreateHikeListModal = ({ closeModal }: TCreateHikeListModalProps) =
       </View>
       <View style={styles.footer}>
         <Pressable style={[styles.button, styles.cancel]} onPress={() => closeModal(null)}>
-          <Typography align="center">Cancel</Typography>
+          <Typography align="center">{t("cancel")}</Typography>
         </Pressable>
         {renderAcceptButton()}
       </View>

@@ -1,26 +1,29 @@
 import { TStuffItem } from "../types";
+import { useStuffTranslations } from "../use-stuff-translations";
 
 export const useDocumentsStuff = (): Record<TStuffItem<"documents">["id"], TStuffItem<"documents">> => {
+  const { t } = useStuffTranslations();
+
   return {
     id_card: {
       id: "id_card",
-      title: "ID card / Passport",
+      title: t("id_card"),
     },
     cash: {
       id: "cash",
-      title: "Cash",
+      title: t("cash"),
     },
     bank_card: {
       id: "bank_card",
-      title: "Bank card",
+      title: t("bank_card"),
     },
     border_permit: {
       id: "border_permit",
-      title: "Border permit",
+      title: t("border_permit"),
     },
     waterproof_case: {
       id: "waterproof_case",
-      title: "Waterproof case",
+      title: t("waterproof_case"),
     },
   };
 };

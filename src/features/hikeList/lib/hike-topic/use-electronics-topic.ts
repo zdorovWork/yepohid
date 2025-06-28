@@ -1,8 +1,8 @@
-import { THikeTopic, useElectronicsStuff } from "entities/hikeItem";
+import { THikeTopic, useInitialItems } from "entities/hikeItem";
 
 export const useElectronicsTopic = () => {
   const { mobile_phone, power_banks, charging_cables, electronics_dry_bag, camera, memory_cards, camera_batteries } =
-    useElectronicsStuff();
+    useInitialItems()["electronics"];
 
   const getElectronicsInitialHikeTopic = (): THikeTopic<"electronics"> => {
     return {

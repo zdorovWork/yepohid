@@ -1,7 +1,7 @@
-import { THikeTopic, useOtherStuff } from "entities/hikeItem";
+import { THikeTopic, useInitialItems } from "entities/hikeItem";
 
 export const useOtherTopic = () => {
-  const { repair_kit, trash_bag, sit_pad, inflatable_pad_chair, mini_hammock } = useOtherStuff();
+  const { repair_kit, trash_bag, sit_pad, inflatable_pad_chair, mini_hammock } = useInitialItems()["other"];
 
   const getOtherInitialHikeTopic = (): THikeTopic<"other"> => {
     return {

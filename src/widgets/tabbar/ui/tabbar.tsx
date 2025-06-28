@@ -4,12 +4,13 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { router } from "expo-router";
 
-import { Routes } from "shared/config/routes";
 import { CheckedIcon } from "shared/ui/icons/checked-icon";
 import { CheckmarkIcon } from "shared/ui/icons/checkmark-icon";
 import { CrossIcon } from "shared/ui/icons/cross-icon";
 import { EditIcon } from "shared/ui/icons/edit-icon";
 import { HomeIcon } from "shared/ui/icons/home-icon";
+
+import { useTabbarTranslations } from "../model/use-tabbar-translations";
 
 const TabComponent = ({ onPress, icon, text }: { onPress: () => void; icon: ReactNode; text: string }) => {
   return (
@@ -28,38 +29,53 @@ export const TabBar = ({ tabs }: { tabs: ReactNode[] }) => {
   );
 };
 
-export const HomeTab = () => (
-  <TabComponent key={Routes.Home} onPress={() => router.push("/")} icon={<HomeIcon />} text={"Home"} />
-);
+export const HomeTab = () => {
+  const { t } = useTabbarTranslations();
 
-export const AddNewListTab = ({ onPress, text }: { onPress: () => void; text: string }) => (
-  <TabComponent
-    key={Routes.LISTS}
-    onPress={onPress}
-    icon={
-      <View style={styles.addNewButton}>
-        <CrossIcon rotation={45} color={"#fff"} strokeWidth={2} />
-      </View>
-    }
-    text={text}
-  />
-);
+  return <TabComponent onPress={() => router.push("/")} icon={<HomeIcon />} text={t("home")} />;
+};
 
-export const EditTab = ({ onPress }: { onPress: () => void }) => (
-  <TabComponent key={"edit"} onPress={onPress} icon={<EditIcon />} text={"Edit"} />
-);
+export const AddNewListTab = ({ onPress }: { onPress: () => void }) => {
+  const { t } = useTabbarTranslations();
 
-export const HideSelectedTab = ({ onPress, text }: { onPress: () => void; text: string }) => (
-  <TabComponent key={"hide"} onPress={onPress} icon={<CheckedIcon />} text={text} />
-);
+  return (
+    <TabComponent
+      onPress={onPress}
+      icon={
+        <View style={styles.addNewButton}>
+          <CrossIcon rotation={45} color={"#fff"} strokeWidth={2} />
+        </View>
+      }
+      text={t("addNew")}
+    />
+  );
+};
 
-export const CrossTab = ({ onPress }: { onPress: () => void }) => (
-  <TabComponent key={"cross"} onPress={onPress} icon={<CrossIcon />} text={"Cancel"} />
-);
+export const EditTab = ({ onPress }: { onPress: () => void }) => {
+  const { t } = useTabbarTranslations();
 
-export const CheckTab = ({ onPress }: { onPress: () => void }) => (
-  <TabComponent key={"check"} onPress={onPress} icon={<CheckmarkIcon />} text={"Save"} />
-);
+  return <TabComponent onPress={onPress} icon={<EditIcon />} text={t("edit")} />;
+};
+
+export const HideSelectedTab = ({ onPress, checked }: { onPress: () => void; checked: boolean }) => {
+  const { t } = useTabbarTranslations();
+
+  return (
+    <TabComponent onPress={onPress} icon={<CheckedIcon />} text={checked ? t("selected.hide") : t("selected.show")} />
+  );
+};
+
+export const CrossTab = ({ onPress }: { onPress: () => void }) => {
+  const { t } = useTabbarTranslations();
+
+  return <TabComponent onPress={onPress} icon={<CrossIcon />} text={t("cancel")} />;
+};
+
+export const CheckTab = ({ onPress }: { onPress: () => void }) => {
+  const { t } = useTabbarTranslations();
+
+  return <TabComponent onPress={onPress} icon={<CheckmarkIcon />} text={t("save")} />;
+};
 
 const styles = StyleSheet.create({
   tabBar: {

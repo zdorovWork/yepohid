@@ -19,7 +19,7 @@ export const UICheckbox = ({ text, checked, onPress, style, ...otherProps }: TUI
 };
 
 const styles = StyleSheet.create({
-  checkboxContainer: { flexDirection: "row", alignItems: "center" },
+  checkboxContainer: { flexDirection: "row", alignItems: "center", overflow: "hidden" },
   checkbox: {
     width: 24,
     height: 24,

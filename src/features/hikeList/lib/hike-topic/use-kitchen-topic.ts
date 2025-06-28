@@ -1,4 +1,4 @@
-import { THikeTopic, useKitchenStuff } from "entities/hikeItem";
+import { THikeTopic, useInitialItems } from "entities/hikeItem";
 
 import { THikeList } from "../../model/types";
 
@@ -20,7 +20,7 @@ export const useKitchenTopic = () => {
     tripod_stand,
     integration_system,
     gas_can,
-  } = useKitchenStuff();
+  } = useInitialItems()["kitchen"];
 
   const getKitchenInitialHikeTopic = (tags: THikeList["tags"]): THikeTopic<"kitchen"> => {
     const additionalStuff: THikeTopic<"kitchen">["stuff"] = [];

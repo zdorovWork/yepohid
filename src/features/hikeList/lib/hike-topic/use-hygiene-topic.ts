@@ -1,4 +1,4 @@
-import { THikeTopic, useHygieneStuff } from "entities/hikeItem";
+import { THikeTopic, useInitialItems } from "entities/hikeItem";
 
 export const useHygieneTopic = () => {
   const {
@@ -15,7 +15,7 @@ export const useHygieneTopic = () => {
     eco_soap,
     mini_scissors,
     mirror,
-  } = useHygieneStuff();
+  } = useInitialItems()["hygiene"];
 
   const getHygieneInitialHikeTopic = (): THikeTopic<"hygiene"> => {
     return {

@@ -1,8 +1,8 @@
-import { THikeTopic, useNavigationStuff } from "entities/hikeItem";
+import { THikeTopic, useInitialItems } from "entities/hikeItem";
 
 export const useNavigationTopic = () => {
   const { navigation_app, route_tracks, route_maps, backup_navigation_device, laminated_map, compass } =
-    useNavigationStuff();
+    useInitialItems()["navigation"];
 
   const getNavigationInitialHikeTopic = (): THikeTopic<"navigation"> => {
     return {

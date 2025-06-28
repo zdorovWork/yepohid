@@ -1,8 +1,8 @@
-import { THikeTopic, useGearStuff } from "entities/hikeItem";
+import { THikeTopic, useInitialItems } from "entities/hikeItem";
 
 export const useGearTopic = () => {
   const { backpack, rain_cover, trekking_poles, flashlight, flashlight_battery, dry_bags, sunglasses, mosquito_net } =
-    useGearStuff();
+    useInitialItems()["gear"];
 
   const getGearInitialHikeTopic = (): THikeTopic<"gear"> => {
     return {

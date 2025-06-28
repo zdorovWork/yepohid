@@ -1,4 +1,4 @@
-import { THikeTopic, useClothingStuff } from "entities/hikeItem";
+import { THikeTopic, useInitialItems } from "entities/hikeItem";
 
 import { THikeList } from "../../model/types";
 
@@ -30,7 +30,7 @@ export const useClothingTopic = () => {
     thermal_pants,
     waterproof_pants,
     warm_buff,
-  } = useClothingStuff();
+  } = useInitialItems()["clothing"];
 
   const getClothingInitialHikeTopic = (tags: THikeList["tags"]): THikeTopic<"clothing"> => {
     const additionalStuff: THikeTopic<"clothing">["stuff"] = [];

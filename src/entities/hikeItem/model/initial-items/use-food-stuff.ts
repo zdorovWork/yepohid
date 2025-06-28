@@ -1,18 +1,21 @@
 import { TStuffItem } from "../types";
+import { useStuffTranslations } from "../use-stuff-translations";
 
 export const useFoodStuff = (): Record<TStuffItem<"food">["id"], TStuffItem<"food">> => {
+  const { t } = useStuffTranslations();
+
   return {
     tea: {
       id: "tea",
-      title: "Tea",
+      title: t("tea"),
     },
     spices: {
       id: "spices",
-      title: "Spices",
+      title: t("spices"),
     },
     salt: {
       id: "salt",
-      title: "Salt",
+      title: t("salt"),
     },
   };
 };

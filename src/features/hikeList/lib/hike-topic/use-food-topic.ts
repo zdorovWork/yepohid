@@ -1,7 +1,7 @@
-import { THikeTopic, useFoodStuff } from "entities/hikeItem";
+import { THikeTopic, useInitialItems } from "entities/hikeItem";
 
 export const useFoodTopic = () => {
-  const { tea, spices, salt } = useFoodStuff();
+  const { tea, spices, salt } = useInitialItems()["food"];
 
   const getFoodInitialHikeTopic = (): THikeTopic<"food"> => {
     return {

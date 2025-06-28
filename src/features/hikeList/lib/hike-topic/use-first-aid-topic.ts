@@ -1,7 +1,7 @@
-import { THikeTopic, useFirstAidStuff } from "entities/hikeItem";
+import { THikeTopic, useInitialItems } from "entities/hikeItem";
 
 export const useFirstAidTopic = () => {
-  const { antiseptic } = useFirstAidStuff();
+  const { antiseptic } = useInitialItems()["first_aid"];
 
   const getFirstAidInitialHikeTopic = (): THikeTopic<"first_aid"> => {
     return {

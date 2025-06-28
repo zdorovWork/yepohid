@@ -29,12 +29,6 @@ export const HomeScreen = () => {
       en: "Equipment lists",
       ua: "Списки спорядження",
     },
-    tabbar: {
-      addNew: {
-        en: "Add new",
-        ua: "Додати новий",
-      },
-    },
   });
 
   const redirectToList = (id: string) => {
@@ -59,11 +53,7 @@ export const HomeScreen = () => {
         }}
       />
 
-      <PageLayout
-        tabbar={
-          <TabBar tabs={[<AddNewListTab key={"add-new"} onPress={handleCreateHikeList} text={t("tabbar.addNew")} />]} />
-        }
-      >
+      <PageLayout tabbar={<TabBar tabs={[<AddNewListTab key={"add-new"} onPress={handleCreateHikeList} />]} />}>
         <FlashList
           contentContainerStyle={styles.list}
           data={Object.values(lists)}

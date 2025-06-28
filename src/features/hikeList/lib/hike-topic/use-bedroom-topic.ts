@@ -1,4 +1,5 @@
-import { THikeTopic, useBedroomStuff } from "entities/hikeItem";
+import { THikeTopic } from "entities/hikeItem";
+import { useInitialItems } from "entities/hikeItem/model/initial-items/use-initial-items";
 
 import { THikeList } from "../../model/types";
 
@@ -20,7 +21,7 @@ export const useBedroomTopic = () => {
     hamac,
     underquilt,
     suspension_slings,
-  } = useBedroomStuff();
+  } = useInitialItems()["bedroom"];
 
   const getBedroomInitialHikeTopic = (tags: THikeList["tags"]): THikeTopic<"bedroom"> => {
     const isAwning = tags.includes("awning");

@@ -3,7 +3,7 @@ import { Pressable, ScrollView, StyleSheet, Text } from "react-native";
 
 import { HikeCard, THikeTopic, TStuffItem } from "entities/hikeItem";
 
-import { THikeList } from "features/hikeList";
+import { THikeList, useTopicTranslations } from "features/hikeList";
 
 import { CheckTab, CrossTab, TabBar } from "widgets/tabbar";
 
@@ -23,6 +23,8 @@ type TEditListProps = {
 };
 
 export const EditList = ({ onCancel, onSubmit, items, renderProgress, renderStuff, onAddNewStuff }: TEditListProps) => {
+  const { t } = useTopicTranslations();
+
   return (
     <PageLayout
       tabbar={
@@ -31,7 +33,7 @@ export const EditList = ({ onCancel, onSubmit, items, renderProgress, renderStuf
     >
       <ScrollView contentContainerStyle={styles.list}>
         {items.map((hikeItem) => (
-          <HikeCard key={hikeItem.id} progress={renderProgress(hikeItem)} title={hikeItem.title}>
+          <HikeCard key={hikeItem.id} progress={renderProgress(hikeItem)} title={t(hikeItem.id)}>
             {hikeItem.stuff.map((stuff) => renderStuff(hikeItem.id, stuff))}
 
             <Pressable style={styles.addNewElement} key={"add"} onPress={() => onAddNewStuff(hikeItem.id)}>
