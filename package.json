@@ -9,6 +9,7 @@
     "android": "expo run:android",
     "lint": "expo lint",
     "build:android": "eas build -p android --profile production",
+    "build:android:local": "eas build -p android --profile production --local",
     "ios": "expo run:ios"
   },
   "dependencies": {

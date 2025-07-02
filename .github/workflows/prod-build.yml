@@ -1,0 +1,134 @@
+name: Production APK Build
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch: # Позволяет запускать вручную
+
+jobs:
+  build-production-apk:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Cache Gradle
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: 17
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript check
+        run: npx tsc --noEmit
+
+      - name: Run tests (optional)
+        run: npm test
+        continue-on-error: true # Продолжить даже если тесты упали
+
+      - name: Prebuild Android for Production
+        run: npx expo prebuild --platform android --non-interactive --clear
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./android/gradlew
+
+      # Создание keystore для подписи (если у вас нет готового)
+      - name: Generate keystore
+        run: |
+          keytool -genkey -v -keystore ./android/app/release-key.keystore \
+            -alias release-key \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -storepass ${{ secrets.KEYSTORE_PASSWORD || 'android' }} \
+            -keypass ${{ secrets.KEY_PASSWORD || 'android' }} \
+            -dname "CN=Yepohid, OU=Zapilman, O=Zapilman, L=Kyiv, ST=Kyiv, C=UA"
+
+      # Или использовать существующий keystore из secrets
+      # - name: Setup keystore
+      #   run: |
+      #     echo "${{ secrets.KEYSTORE_FILE }}" | base64 -d > ./android/app/release-key.keystore
+
+      - name: Build Release APK
+        run: ./gradlew assembleRelease
+        working-directory: android
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD || 'android' }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD || 'android' }}
+          KEY_ALIAS: release-key
+          KEYSTORE_FILE: release-key.keystore
+
+      - name: Build Release Bundle (AAB) - Optional
+        run: ./gradlew bundleRelease
+        working-directory: android
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD || 'android' }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD || 'android' }}
+          KEY_ALIAS: release-key
+          KEYSTORE_FILE: release-key.keystore
+
+      - name: Rename APK for clarity
+        run: |
+          mv android/app/build/outputs/apk/release/app-release.apk production-app-$(date +%Y%m%d-%H%M%S).apk
+
+      - name: Rename AAB for clarity (if built)
+        run: |
+          if [ -f android/app/build/outputs/bundle/release/app-release.aab ]; then
+            mv android/app/build/outputs/bundle/release/app-release.aab production-app-$(date +%Y%m%d-%H%M%S).aab
+          fi
+
+      - name: Get APK size
+        run: |
+          APK_SIZE=$(du -h production-app-*.apk | cut -f1)
+          echo "APK_SIZE=$APK_SIZE" >> $GITHUB_ENV
+          echo "Production APK size: $APK_SIZE"
+
+      - name: Upload APK as GitHub artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-app-apk
+          path: production-app-*.apk
+
+      - name: Upload AAB as GitHub artifact (if exists)
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-app-aab
+          path: production-app-*.aab
+        continue-on-error: true
+
+      - name: Comment APK size on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `📱 Production APK built successfully!\n\n**Size:** ${{ env.APK_SIZE }}\n\nDownload from [Actions artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`
+            })
