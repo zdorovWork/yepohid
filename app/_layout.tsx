@@ -27,7 +27,7 @@ export default function RootLayout() {
             <Stack.Screen name="+not-found" />
           </Stack>
         </ModalProvider>
-        <StatusBar style="auto" />
+        <StatusBar style="dark" />
       </PortalProvider>
     </LanguageProvider>
   );
