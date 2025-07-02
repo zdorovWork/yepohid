@@ -60,10 +60,8 @@
     public void onEnter(org.mozilla.javascript.Context, org.mozilla.javascript.Scriptable, org.mozilla.javascript.Scriptable, java.lang.Object[]);
 }
 
-# R8 оптимизации
--optimizations !code/simplification/cast,!field/*,!class/merging/*
--optimizationpasses 5
--allowaccessmodification
+# R8 автоматически применяет оптимизации
+# Убираем устаревшие настройки оптимизации
 -dontpreverify
 
 # Сохранить имена файлов и номера строк для отладки crash reports
